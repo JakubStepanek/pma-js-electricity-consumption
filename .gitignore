@@ -53,3 +53,77 @@ doc/api/
 
 .flutter-plugins
 .flutter-plugins-dependencies
+
+# Dart/Pub specific
+*.dart_tool/
+*.pub/
+.packages
+.pub-cache/
+.pub/
+*.lock
+
+# Flutter specific
+.flutter-plugins
+.flutter-plugins-dependencies
+.flutter-plugins
+.flutter/
+build/
+ios/Flutter/Flutter.framework/
+ios/Flutter/Flutter.podspec
+ios/.symlinks/
+ios/Pods/
+.flutter-plugins-dependencies
+*.flutter-plugins
+linux/flutter/ephemeral/
+windows/flutter/ephemeral/
+macos/flutter/ephemeral/
+
+# Gradle
+.gradle
+.gradle/
+!gradle-wrapper.jar
+
+# Android specific
+android/.cxx/
+android/local.properties
+android/app/debug.keystore
+android/app/google-services.json
+android/key.properties
+
+# Xcode
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/.last_build_id
+ios/.flutter-plugins
+*.xcworkspace/
+*.xcuserstate
+*.xcuserdata/
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.pbxuser
+*.xcscheme
+.DS_Store
+
+# Visual Studio Code
+.vscode/
+.history/
+
+# Miscellaneous
+*.log
+*.tmp
+*.swp
+*.lock
+*.idea/
+*.iml
+*.ipr
+
+# Generated files
+*.apk
+*.aab
+*.ipa
+
+# Obsolete files
+*.orig
+*.rej
+
