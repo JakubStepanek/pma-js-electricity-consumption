@@ -1,30 +1,26 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:electricity_consumption_tracker/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+  testWidgets('Add Data button test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(ElectricityConsumptionApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Verify that the "Add Data" button is present.
+    expect(find.text('Add Data'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
+    // Verify that the "+" icon is present in the button.
+    expect(find.byIcon(Icons.add), findsOneWidget);
+
+    // Tap the "Add Data" button and trigger a frame.
     await tester.tap(find.byIcon(Icons.add));
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // You can add further logic here to verify what happens after tapping
+    // the button, for example navigating to a new screen or opening a form.
+    // For now, we simply verify that the button is tappable.
+    expect(find.text('Add Data'), findsOneWidget); // Still present after tap.
   });
 }
