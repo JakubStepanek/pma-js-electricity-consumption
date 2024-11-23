@@ -10,9 +10,7 @@ import 'tables/consumption_table.dart';
 part 'database.g.dart';
 
 @DriftDatabase(
-  tables: [
-    Consumptions
-  ], // Přidej všechny tabulky, které bude databáze obsahovat
+  tables: [Consumptions],
 )
 class AppDb extends _$AppDb {
   // Konstruktor databáze
