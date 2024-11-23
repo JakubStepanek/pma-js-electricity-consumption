@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'views/home_view.dart'; // Import HomeView
+import 'screens/home_screen.dart'; // Import HomeView
 
 void main() {
   runApp(ElectricityConsumptionApp());
@@ -12,7 +12,7 @@ class ElectricityConsumptionApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Electricity Consumption',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: HomeView(), // Nastavení výchozí obrazovky
+      home: HomeScreen(), // Nastavení výchozí obrazovky
     );
   }
 }

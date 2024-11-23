@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import '../controllers/home_controller.dart'; // Import controlleru
 
-class HomeView extends StatelessWidget {
-  final HomeController _controller = HomeController(); // Vytvoření instance controlleru
+class HomeScreen extends StatelessWidget {
+  final HomeController _controller =
+      HomeController(); // Vytvoření instance controlleru
 
   @override
   Widget build(BuildContext context) {
-    final stats = _controller.getStatistics(); // Získání statistik z controlleru
+    final stats =
+        _controller.getStatistics(); // Získání statistik z controlleru
 
     return Scaffold(
       appBar: AppBar(title: Text('Spotřeba elektřiny')),
@@ -51,7 +53,8 @@ class HomeView extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Průměrná měsíční spotřeba: ${stats['averageMonthly']} kWh',
+                      Text(
+                          'Průměrná měsíční spotřeba: ${stats['averageMonthly']} kWh',
                           style: TextStyle(fontSize: 16)),
                       Text('Nejvyšší spotřeba: ${stats['highest']} kWh',
                           style: TextStyle(fontSize: 16)),
@@ -79,7 +82,8 @@ class HomeView extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: () {
-                  _controller.addConsumptionRecord(); // Volání controlleru při stisku tlačítka
+                  _controller
+                      .addConsumptionRecord(); // Volání controlleru při stisku tlačítka
                 },
                 icon: Icon(Icons.add),
                 label: Text('Přidat záznam'),
