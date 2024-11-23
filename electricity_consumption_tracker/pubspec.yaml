@@ -1,25 +1,26 @@
 name: electricity_consumption_tracker
-description: A Flutter app to track electricity consumption with data storage and analysis.
+description: A Flutter app for tracking electricity consumption.
 
-publish_to: "none"
+publish_to: "none" # Zabrání publikování na pub.dev
 
 version: 1.0.0+1
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: ">=3.0.0 <4.0.0" # Ujisti se, že odpovídá požadavkům závislostí
 
 dependencies:
   flutter:
     sdk: flutter
-  drift: ^2.5.0 # Hlavní knihovna Drift
-  sqflite: ^2.2.0
-  path_provider: ^2.0.14 # Ukládání dat na zařízení uživatele
+  drift: ^2.9.0 # Hlavní knihovna pro práci s databází
+  sqlite3_flutter_libs: ^0.5.0 # SQLite implementace
+  path_provider: ^2.0.0 # Získávání cesty k souborům
+  path: ^1.8.3 # Práce s cestami k souborům
 
 dev_dependencies:
   flutter_test:
-    sdk: flutter
-  drift_dev: ^2.5.0 # Generování kódu pro Drift
-  build_runner: ^2.3.3 # Potřebný nástroj pro generování kódu
+    sdk: flutter # Testovací závislosti
+  drift_dev: ^2.9.0 # Drift code generator
+  build_runner: ^2.4.5 # Generátor kódu
 
 flutter:
   uses-material-design: true

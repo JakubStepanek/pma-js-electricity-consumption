@@ -1,14 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'electricity_database.dart';
+part of 'database.dart';
 
 // ignore_for_file: type=lint
-class $ElectricityConsumptionsTable extends ElectricityConsumptions
-    with TableInfo<$ElectricityConsumptionsTable, ElectricityConsumptionEntry> {
+class $ConsumptionsTable extends Consumptions
+    with TableInfo<$ConsumptionsTable, Consumption> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ElectricityConsumptionsTable(this.attachedDatabase, [this._alias]);
+  $ConsumptionsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -53,10 +53,9 @@ class $ElectricityConsumptionsTable extends ElectricityConsumptions
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'electricity_consumptions';
+  static const String $name = 'consumptions';
   @override
-  VerificationContext validateIntegrity(
-      Insertable<ElectricityConsumptionEntry> instance,
+  VerificationContext validateIntegrity(Insertable<Consumption> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -97,10 +96,9 @@ class $ElectricityConsumptionsTable extends ElectricityConsumptions
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  ElectricityConsumptionEntry map(Map<String, dynamic> data,
-      {String? tablePrefix}) {
+  Consumption map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ElectricityConsumptionEntry(
+    return Consumption(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       date: attachedDatabase.typeMapping
@@ -117,19 +115,18 @@ class $ElectricityConsumptionsTable extends ElectricityConsumptions
   }
 
   @override
-  $ElectricityConsumptionsTable createAlias(String alias) {
-    return $ElectricityConsumptionsTable(attachedDatabase, alias);
+  $ConsumptionsTable createAlias(String alias) {
+    return $ConsumptionsTable(attachedDatabase, alias);
   }
 }
 
-class ElectricityConsumptionEntry extends DataClass
-    implements Insertable<ElectricityConsumptionEntry> {
+class Consumption extends DataClass implements Insertable<Consumption> {
   final int id;
   final DateTime date;
   final double consumptionTarifLow;
   final double consumptionTarifHigh;
   final double? consumptionTarifOut;
-  const ElectricityConsumptionEntry(
+  const Consumption(
       {required this.id,
       required this.date,
       required this.consumptionTarifLow,
@@ -148,8 +145,8 @@ class ElectricityConsumptionEntry extends DataClass
     return map;
   }
 
-  ElectricityConsumptionsCompanion toCompanion(bool nullToAbsent) {
-    return ElectricityConsumptionsCompanion(
+  ConsumptionsCompanion toCompanion(bool nullToAbsent) {
+    return ConsumptionsCompanion(
       id: Value(id),
       date: Value(date),
       consumptionTarifLow: Value(consumptionTarifLow),
@@ -160,10 +157,10 @@ class ElectricityConsumptionEntry extends DataClass
     );
   }
 
-  factory ElectricityConsumptionEntry.fromJson(Map<String, dynamic> json,
+  factory Consumption.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ElectricityConsumptionEntry(
+    return Consumption(
       id: serializer.fromJson<int>(json['id']),
       date: serializer.fromJson<DateTime>(json['date']),
       consumptionTarifLow:
@@ -186,13 +183,13 @@ class ElectricityConsumptionEntry extends DataClass
     };
   }
 
-  ElectricityConsumptionEntry copyWith(
+  Consumption copyWith(
           {int? id,
           DateTime? date,
           double? consumptionTarifLow,
           double? consumptionTarifHigh,
           Value<double?> consumptionTarifOut = const Value.absent()}) =>
-      ElectricityConsumptionEntry(
+      Consumption(
         id: id ?? this.id,
         date: date ?? this.date,
         consumptionTarifLow: consumptionTarifLow ?? this.consumptionTarifLow,
@@ -201,9 +198,8 @@ class ElectricityConsumptionEntry extends DataClass
             ? consumptionTarifOut.value
             : this.consumptionTarifOut,
       );
-  ElectricityConsumptionEntry copyWithCompanion(
-      ElectricityConsumptionsCompanion data) {
-    return ElectricityConsumptionEntry(
+  Consumption copyWithCompanion(ConsumptionsCompanion data) {
+    return Consumption(
       id: data.id.present ? data.id.value : this.id,
       date: data.date.present ? data.date.value : this.date,
       consumptionTarifLow: data.consumptionTarifLow.present
@@ -220,7 +216,7 @@ class ElectricityConsumptionEntry extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('ElectricityConsumptionEntry(')
+    return (StringBuffer('Consumption(')
           ..write('id: $id, ')
           ..write('date: $date, ')
           ..write('consumptionTarifLow: $consumptionTarifLow, ')
@@ -236,7 +232,7 @@ class ElectricityConsumptionEntry extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ElectricityConsumptionEntry &&
+      (other is Consumption &&
           other.id == this.id &&
           other.date == this.date &&
           other.consumptionTarifLow == this.consumptionTarifLow &&
@@ -244,21 +240,20 @@ class ElectricityConsumptionEntry extends DataClass
           other.consumptionTarifOut == this.consumptionTarifOut);
 }
 
-class ElectricityConsumptionsCompanion
-    extends UpdateCompanion<ElectricityConsumptionEntry> {
+class ConsumptionsCompanion extends UpdateCompanion<Consumption> {
   final Value<int> id;
   final Value<DateTime> date;
   final Value<double> consumptionTarifLow;
   final Value<double> consumptionTarifHigh;
   final Value<double?> consumptionTarifOut;
-  const ElectricityConsumptionsCompanion({
+  const ConsumptionsCompanion({
     this.id = const Value.absent(),
     this.date = const Value.absent(),
     this.consumptionTarifLow = const Value.absent(),
     this.consumptionTarifHigh = const Value.absent(),
     this.consumptionTarifOut = const Value.absent(),
   });
-  ElectricityConsumptionsCompanion.insert({
+  ConsumptionsCompanion.insert({
     this.id = const Value.absent(),
     required DateTime date,
     required double consumptionTarifLow,
@@ -267,7 +262,7 @@ class ElectricityConsumptionsCompanion
   })  : date = Value(date),
         consumptionTarifLow = Value(consumptionTarifLow),
         consumptionTarifHigh = Value(consumptionTarifHigh);
-  static Insertable<ElectricityConsumptionEntry> custom({
+  static Insertable<Consumption> custom({
     Expression<int>? id,
     Expression<DateTime>? date,
     Expression<double>? consumptionTarifLow,
@@ -286,13 +281,13 @@ class ElectricityConsumptionsCompanion
     });
   }
 
-  ElectricityConsumptionsCompanion copyWith(
+  ConsumptionsCompanion copyWith(
       {Value<int>? id,
       Value<DateTime>? date,
       Value<double>? consumptionTarifLow,
       Value<double>? consumptionTarifHigh,
       Value<double?>? consumptionTarifOut}) {
-    return ElectricityConsumptionsCompanion(
+    return ConsumptionsCompanion(
       id: id ?? this.id,
       date: date ?? this.date,
       consumptionTarifLow: consumptionTarifLow ?? this.consumptionTarifLow,
@@ -327,7 +322,7 @@ class ElectricityConsumptionsCompanion
 
   @override
   String toString() {
-    return (StringBuffer('ElectricityConsumptionsCompanion(')
+    return (StringBuffer('ConsumptionsCompanion(')
           ..write('id: $id, ')
           ..write('date: $date, ')
           ..write('consumptionTarifLow: $consumptionTarifLow, ')
@@ -338,28 +333,27 @@ class ElectricityConsumptionsCompanion
   }
 }
 
-abstract class _$ElectricityDatabase extends GeneratedDatabase {
-  _$ElectricityDatabase(QueryExecutor e) : super(e);
-  $ElectricityDatabaseManager get managers => $ElectricityDatabaseManager(this);
-  late final $ElectricityConsumptionsTable electricityConsumptions =
-      $ElectricityConsumptionsTable(this);
+abstract class _$AppDb extends GeneratedDatabase {
+  _$AppDb(QueryExecutor e) : super(e);
+  $AppDbManager get managers => $AppDbManager(this);
+  late final $ConsumptionsTable consumptions = $ConsumptionsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [electricityConsumptions];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [consumptions];
 }
 
-typedef $$ElectricityConsumptionsTableCreateCompanionBuilder
-    = ElectricityConsumptionsCompanion Function({
+typedef $$ConsumptionsTableCreateCompanionBuilder = ConsumptionsCompanion
+    Function({
   Value<int> id,
   required DateTime date,
   required double consumptionTarifLow,
   required double consumptionTarifHigh,
   Value<double?> consumptionTarifOut,
 });
-typedef $$ElectricityConsumptionsTableUpdateCompanionBuilder
-    = ElectricityConsumptionsCompanion Function({
+typedef $$ConsumptionsTableUpdateCompanionBuilder = ConsumptionsCompanion
+    Function({
   Value<int> id,
   Value<DateTime> date,
   Value<double> consumptionTarifLow,
@@ -367,9 +361,9 @@ typedef $$ElectricityConsumptionsTableUpdateCompanionBuilder
   Value<double?> consumptionTarifOut,
 });
 
-class $$ElectricityConsumptionsTableFilterComposer
-    extends Composer<_$ElectricityDatabase, $ElectricityConsumptionsTable> {
-  $$ElectricityConsumptionsTableFilterComposer({
+class $$ConsumptionsTableFilterComposer
+    extends Composer<_$AppDb, $ConsumptionsTable> {
+  $$ConsumptionsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -395,9 +389,9 @@ class $$ElectricityConsumptionsTableFilterComposer
       builder: (column) => ColumnFilters(column));
 }
 
-class $$ElectricityConsumptionsTableOrderingComposer
-    extends Composer<_$ElectricityDatabase, $ElectricityConsumptionsTable> {
-  $$ElectricityConsumptionsTableOrderingComposer({
+class $$ConsumptionsTableOrderingComposer
+    extends Composer<_$AppDb, $ConsumptionsTable> {
+  $$ConsumptionsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -423,9 +417,9 @@ class $$ElectricityConsumptionsTableOrderingComposer
       builder: (column) => ColumnOrderings(column));
 }
 
-class $$ElectricityConsumptionsTableAnnotationComposer
-    extends Composer<_$ElectricityDatabase, $ElectricityConsumptionsTable> {
-  $$ElectricityConsumptionsTableAnnotationComposer({
+class $$ConsumptionsTableAnnotationComposer
+    extends Composer<_$AppDb, $ConsumptionsTable> {
+  $$ConsumptionsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -448,36 +442,28 @@ class $$ElectricityConsumptionsTableAnnotationComposer
       column: $table.consumptionTarifOut, builder: (column) => column);
 }
 
-class $$ElectricityConsumptionsTableTableManager extends RootTableManager<
-    _$ElectricityDatabase,
-    $ElectricityConsumptionsTable,
-    ElectricityConsumptionEntry,
-    $$ElectricityConsumptionsTableFilterComposer,
-    $$ElectricityConsumptionsTableOrderingComposer,
-    $$ElectricityConsumptionsTableAnnotationComposer,
-    $$ElectricityConsumptionsTableCreateCompanionBuilder,
-    $$ElectricityConsumptionsTableUpdateCompanionBuilder,
-    (
-      ElectricityConsumptionEntry,
-      BaseReferences<_$ElectricityDatabase, $ElectricityConsumptionsTable,
-          ElectricityConsumptionEntry>
-    ),
-    ElectricityConsumptionEntry,
+class $$ConsumptionsTableTableManager extends RootTableManager<
+    _$AppDb,
+    $ConsumptionsTable,
+    Consumption,
+    $$ConsumptionsTableFilterComposer,
+    $$ConsumptionsTableOrderingComposer,
+    $$ConsumptionsTableAnnotationComposer,
+    $$ConsumptionsTableCreateCompanionBuilder,
+    $$ConsumptionsTableUpdateCompanionBuilder,
+    (Consumption, BaseReferences<_$AppDb, $ConsumptionsTable, Consumption>),
+    Consumption,
     PrefetchHooks Function()> {
-  $$ElectricityConsumptionsTableTableManager(
-      _$ElectricityDatabase db, $ElectricityConsumptionsTable table)
+  $$ConsumptionsTableTableManager(_$AppDb db, $ConsumptionsTable table)
       : super(TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$ElectricityConsumptionsTableFilterComposer(
-                  $db: db, $table: table),
+              $$ConsumptionsTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$ElectricityConsumptionsTableOrderingComposer(
-                  $db: db, $table: table),
+              $$ConsumptionsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$ElectricityConsumptionsTableAnnotationComposer(
-                  $db: db, $table: table),
+              $$ConsumptionsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<int> id = const Value.absent(),
             Value<DateTime> date = const Value.absent(),
@@ -485,7 +471,7 @@ class $$ElectricityConsumptionsTableTableManager extends RootTableManager<
             Value<double> consumptionTarifHigh = const Value.absent(),
             Value<double?> consumptionTarifOut = const Value.absent(),
           }) =>
-              ElectricityConsumptionsCompanion(
+              ConsumptionsCompanion(
             id: id,
             date: date,
             consumptionTarifLow: consumptionTarifLow,
@@ -499,7 +485,7 @@ class $$ElectricityConsumptionsTableTableManager extends RootTableManager<
             required double consumptionTarifHigh,
             Value<double?> consumptionTarifOut = const Value.absent(),
           }) =>
-              ElectricityConsumptionsCompanion.insert(
+              ConsumptionsCompanion.insert(
             id: id,
             date: date,
             consumptionTarifLow: consumptionTarifLow,
@@ -513,28 +499,22 @@ class $$ElectricityConsumptionsTableTableManager extends RootTableManager<
         ));
 }
 
-typedef $$ElectricityConsumptionsTableProcessedTableManager
-    = ProcessedTableManager<
-        _$ElectricityDatabase,
-        $ElectricityConsumptionsTable,
-        ElectricityConsumptionEntry,
-        $$ElectricityConsumptionsTableFilterComposer,
-        $$ElectricityConsumptionsTableOrderingComposer,
-        $$ElectricityConsumptionsTableAnnotationComposer,
-        $$ElectricityConsumptionsTableCreateCompanionBuilder,
-        $$ElectricityConsumptionsTableUpdateCompanionBuilder,
-        (
-          ElectricityConsumptionEntry,
-          BaseReferences<_$ElectricityDatabase, $ElectricityConsumptionsTable,
-              ElectricityConsumptionEntry>
-        ),
-        ElectricityConsumptionEntry,
-        PrefetchHooks Function()>;
+typedef $$ConsumptionsTableProcessedTableManager = ProcessedTableManager<
+    _$AppDb,
+    $ConsumptionsTable,
+    Consumption,
+    $$ConsumptionsTableFilterComposer,
+    $$ConsumptionsTableOrderingComposer,
+    $$ConsumptionsTableAnnotationComposer,
+    $$ConsumptionsTableCreateCompanionBuilder,
+    $$ConsumptionsTableUpdateCompanionBuilder,
+    (Consumption, BaseReferences<_$AppDb, $ConsumptionsTable, Consumption>),
+    Consumption,
+    PrefetchHooks Function()>;
 
-class $ElectricityDatabaseManager {
-  final _$ElectricityDatabase _db;
-  $ElectricityDatabaseManager(this._db);
-  $$ElectricityConsumptionsTableTableManager get electricityConsumptions =>
-      $$ElectricityConsumptionsTableTableManager(
-          _db, _db.electricityConsumptions);
+class $AppDbManager {
+  final _$AppDb _db;
+  $AppDbManager(this._db);
+  $$ConsumptionsTableTableManager get consumptions =>
+      $$ConsumptionsTableTableManager(_db, _db.consumptions);
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/electricity_database.dart';
+import '../database/database.dart';
+import 'package:drift/drift.dart' as drift;
 
 class AddConsumptionScreen extends StatefulWidget {
   @override
@@ -12,7 +13,7 @@ class _AddConsumptionScreenState extends State<AddConsumptionScreen> {
   final _highController = TextEditingController();
   final _outController = TextEditingController();
 
-  final ElectricityDatabase db = ElectricityDatabase();
+  final AppDb db = AppDb();
 
   @override
   Widget build(BuildContext context) {
@@ -52,14 +53,18 @@ class _AddConsumptionScreenState extends State<AddConsumptionScreen> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    db.insertConsumption(ElectricityConsumptionEntry(
-                      date: DateTime.now(),
-                      consumptionTarifLow: double.parse(_lowController.text),
-                      consumptionTarifHigh: double.parse(_highController.text),
-                      consumptionTarifOut: _outController.text.isEmpty
-                          ? null
-                          : double.parse(_outController.text),
-                    ));
+                    db.insertConsumption(
+                      ConsumptionsCompanion(
+                        date: drift.Value(DateTime.now()),
+                        consumptionTarifLow:
+                            drift.Value(double.parse(_lowController.text)),
+                        consumptionTarifHigh:
+                            drift.Value(double.parse(_highController.text)),
+                        consumptionTarifOut: _outController.text.isEmpty
+                            ? const drift.Value.absent()
+                            : drift.Value(double.parse(_outController.text)),
+                      ),
+                    );
                     Navigator.pop(context);
                   }
                 },
