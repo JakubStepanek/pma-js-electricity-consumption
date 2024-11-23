@@ -1,3 +1,4 @@
+import 'package:electricity_consumption_tracker/navigation/app_navigation.dart';
 import 'package:flutter/material.dart';
 import '../controllers/home_controller.dart'; // Import controlleru
 
@@ -92,6 +93,7 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: AppNavigation(currentIndex: 0),
     );
   }
 }
