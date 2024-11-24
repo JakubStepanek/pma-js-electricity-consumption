@@ -1,6 +1,6 @@
+import 'package:electricity_consumption_tracker/route/route_generator.dart';
 import 'package:flutter/material.dart';
 import './database/database.dart';
-import 'screens/home_screen.dart'; // Import HomeView
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +23,8 @@ class ElectricityConsumptionApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomeScreen(), // Nastavení výchozí obrazovky
+      initialRoute: '/',
+      onGenerateRoute: RouteGenerator.generateRoute,
     );
   }
 }

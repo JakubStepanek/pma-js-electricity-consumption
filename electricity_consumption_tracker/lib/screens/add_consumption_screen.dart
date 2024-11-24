@@ -1,7 +1,4 @@
-import 'package:electricity_consumption_tracker/navigation/app_navigation.dart';
 import 'package:flutter/material.dart';
-import '../database/database.dart';
-import 'package:drift/drift.dart' as drift;
 
 class AddConsumptionScreen extends StatefulWidget {
   @override
@@ -71,9 +68,6 @@ class _AddConsumptionScreenState extends State<AddConsumptionScreen> {
             ],
           ),
         ),
-      ),
-      bottomNavigationBar: AppNavigation(
-        currentIndex: 2,
       ),
     );
   }

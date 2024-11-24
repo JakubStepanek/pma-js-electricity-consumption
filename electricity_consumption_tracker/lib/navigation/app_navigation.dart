@@ -1,59 +1,31 @@
 import 'package:flutter/material.dart';
-import '../screens/home_screen.dart';
-import '../screens/add_consumption_screen.dart';
-import '../screens/consumption_list_screen.dart';
-import '../screens/graph_analysis_screen.dart';
 
 class AppNavigation extends StatefulWidget {
-  final int currentIndex;
+  // final int currentIndex;
 
-  AppNavigation({this.currentIndex = 0});
+  // AppNavigation({this.currentIndex = 0});
 
   @override
   _AppNavigationState createState() => _AppNavigationState();
 }
 
 class _AppNavigationState extends State<AppNavigation> {
-  int _currentIndex = 0;
-
   @override
   void initState() {
     super.initState();
-    _currentIndex = widget.currentIndex; // Nastavení výchozího indexu
+    //_currentIndex = widget.currentIndex; // Nastavení výchozího indexu
   }
 
   void _onItemTapped(int index) {
-    if (_currentIndex == index)
-      return; // Aby se zbytečně znovu okno neaktualizovalo
-
-    setState(() {
-      _currentIndex = index;
-    });
-
     switch (index) {
-      case 0:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
-        );
-        break;
       case 1:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => ConsumptionListScreen()),
-        );
+        Navigator.pushNamed(context, '/consumption_list');
         break;
       case 2:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => AddConsumptionScreen()),
-        );
+        Navigator.pushNamed(context, '/add_consumption');
         break;
       case 3:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => GraphAnalysisScreen()),
-        );
+        Navigator.pushNamed(context, '/graph_analysis');
         break;
     }
   }
@@ -61,7 +33,6 @@ class _AppNavigationState extends State<AppNavigation> {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      currentIndex: _currentIndex,
       onTap: _onItemTapped,
       type: BottomNavigationBarType.fixed,
       items: const <BottomNavigationBarItem>[

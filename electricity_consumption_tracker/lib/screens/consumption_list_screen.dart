@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import '../database/database.dart';
-import '../navigation/app_navigation.dart';
 
 class ConsumptionListScreen extends StatefulWidget {
-  
-
   @override
   _ConsumptionListScreenState createState() => _ConsumptionListScreenState();
 }
@@ -151,9 +147,6 @@ class _ConsumptionListScreenState extends State<ConsumptionListScreen> {
             ),
           ),
         ],
-      ),
-      bottomNavigationBar: AppNavigation(
-        currentIndex: 1,
       ),
     );
   }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:electricity_consumption_tracker/main.dart';
 
 void main() {
   testWidgets('Add Data button test', (WidgetTester tester) async {

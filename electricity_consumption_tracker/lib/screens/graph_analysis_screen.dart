@@ -1,5 +1,3 @@
-import 'package:electricity_consumption_tracker/database/database.dart';
-import 'package:electricity_consumption_tracker/navigation/app_navigation.dart';
 import 'package:flutter/material.dart';
 import '../controllers/home_controller.dart'; // Import controlleru
 
@@ -93,9 +91,6 @@ class GraphAnalysisScreen extends StatelessWidget {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: AppNavigation(
-        currentIndex: 3,
       ),
     );
   }
