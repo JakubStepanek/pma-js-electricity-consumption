@@ -1,24 +1,44 @@
+import 'package:electricity_consumption_tracker/navigation/app_navigation.dart';
 import 'package:flutter/material.dart';
 import '../database/database.dart';
 import 'package:drift/drift.dart' as drift;
 
 class AddConsumptionScreen extends StatefulWidget {
+  final AppDatabase db;
+  // konstruktor AppDatabase
+  AddConsumptionScreen({required this.db});
+
   @override
   _AddConsumptionScreenState createState() => _AddConsumptionScreenState();
 }
 
 class _AddConsumptionScreenState extends State<AddConsumptionScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _lowController = TextEditingController();
-  final _highController = TextEditingController();
-  final _outController = TextEditingController();
+  final _lowTariffController = TextEditingController();
+  final _highTariffController = TextEditingController();
+  final _outTariffController = TextEditingController();
 
-  final AppDb db = AppDb();
+  void _saveConsumption() async {
+    if (_formKey.currentState!.validate()) {
+      final newConsumption = ConsumptionsCompanion(
+        date: drift.Value(DateTime.now()),
+        consumptionTarifLow:
+            drift.Value(double.parse(_lowTariffController.text)),
+        consumptionTarifHigh:
+            drift.Value(double.parse(_highTariffController.text)),
+        consumptionTarifOut:
+            drift.Value(double.parse(_outTariffController.text)),
+      );
+
+      await widget.db.databaseHelper.insertConsumption(newConsumption);
+      Navigator.pop(context); // Návrat na předchozí obrazovku po uložení
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Add Consumption')),
+      appBar: AppBar(title: Text('Přidat odečet')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -26,53 +46,38 @@ class _AddConsumptionScreenState extends State<AddConsumptionScreen> {
           child: Column(
             children: [
               TextFormField(
-                controller: _lowController,
-                decoration:
-                    InputDecoration(labelText: 'Low Tarif Consumption (kWh)'),
+                controller: _lowTariffController,
+                decoration: InputDecoration(labelText: 'Nízký tarif (kWh)'),
                 keyboardType: TextInputType.number,
                 validator: (value) => value == null || value.isEmpty
-                    ? 'Enter low tarif consumption'
+                    ? 'Zadejte, prosím, nízký tarif.'
                     : null,
               ),
               TextFormField(
-                controller: _highController,
-                decoration:
-                    InputDecoration(labelText: 'High Tarif Consumption (kWh)'),
+                controller: _highTariffController,
+                decoration: InputDecoration(labelText: 'Vysoký tarif (kWh)'),
                 keyboardType: TextInputType.number,
                 validator: (value) => value == null || value.isEmpty
-                    ? 'Enter high tarif consumption'
+                    ? 'Zadejte, prosím, vysoký tarif.'
                     : null,
               ),
               TextFormField(
-                controller: _outController,
-                decoration:
-                    InputDecoration(labelText: 'Export to Grid (Optional)'),
+                controller: _outTariffController,
+                decoration: InputDecoration(labelText: 'Prodejní tarif (kWh)'),
                 keyboardType: TextInputType.number,
               ),
               SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    db.insertConsumption(
-                      ConsumptionsCompanion(
-                        date: drift.Value(DateTime.now()),
-                        consumptionTarifLow:
-                            drift.Value(double.parse(_lowController.text)),
-                        consumptionTarifHigh:
-                            drift.Value(double.parse(_highController.text)),
-                        consumptionTarifOut: _outController.text.isEmpty
-                            ? const drift.Value.absent()
-                            : drift.Value(double.parse(_outController.text)),
-                      ),
-                    );
-                    Navigator.pop(context);
-                  }
-                },
-                child: Text('Add Consumption'),
+                onPressed: _saveConsumption,
+                child: Text('Uložit odečet'),
               ),
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: AppNavigation(
+        db: widget.db,
+        currentIndex: 2,
       ),
     );
   }

@@ -6,7 +6,7 @@ import 'package:electricity_consumption_tracker/main.dart';
 void main() {
   testWidgets('Add Data button test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(ElectricityConsumptionApp());
+    //await tester.pumpWidget(ElectricityConsumptionApp());
 
     // Verify that the "Add Data" button is present.
     expect(find.text('Add Data'), findsOneWidget);

@@ -333,10 +333,12 @@ class ConsumptionsCompanion extends UpdateCompanion<Consumption> {
   }
 }
 
-abstract class _$AppDb extends GeneratedDatabase {
-  _$AppDb(QueryExecutor e) : super(e);
-  $AppDbManager get managers => $AppDbManager(this);
+abstract class _$AppDatabase extends GeneratedDatabase {
+  _$AppDatabase(QueryExecutor e) : super(e);
+  $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $ConsumptionsTable consumptions = $ConsumptionsTable(this);
+  late final DatabaseHelper databaseHelper =
+      DatabaseHelper(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -362,7 +364,7 @@ typedef $$ConsumptionsTableUpdateCompanionBuilder = ConsumptionsCompanion
 });
 
 class $$ConsumptionsTableFilterComposer
-    extends Composer<_$AppDb, $ConsumptionsTable> {
+    extends Composer<_$AppDatabase, $ConsumptionsTable> {
   $$ConsumptionsTableFilterComposer({
     required super.$db,
     required super.$table,
@@ -390,7 +392,7 @@ class $$ConsumptionsTableFilterComposer
 }
 
 class $$ConsumptionsTableOrderingComposer
-    extends Composer<_$AppDb, $ConsumptionsTable> {
+    extends Composer<_$AppDatabase, $ConsumptionsTable> {
   $$ConsumptionsTableOrderingComposer({
     required super.$db,
     required super.$table,
@@ -418,7 +420,7 @@ class $$ConsumptionsTableOrderingComposer
 }
 
 class $$ConsumptionsTableAnnotationComposer
-    extends Composer<_$AppDb, $ConsumptionsTable> {
+    extends Composer<_$AppDatabase, $ConsumptionsTable> {
   $$ConsumptionsTableAnnotationComposer({
     required super.$db,
     required super.$table,
@@ -443,7 +445,7 @@ class $$ConsumptionsTableAnnotationComposer
 }
 
 class $$ConsumptionsTableTableManager extends RootTableManager<
-    _$AppDb,
+    _$AppDatabase,
     $ConsumptionsTable,
     Consumption,
     $$ConsumptionsTableFilterComposer,
@@ -451,10 +453,13 @@ class $$ConsumptionsTableTableManager extends RootTableManager<
     $$ConsumptionsTableAnnotationComposer,
     $$ConsumptionsTableCreateCompanionBuilder,
     $$ConsumptionsTableUpdateCompanionBuilder,
-    (Consumption, BaseReferences<_$AppDb, $ConsumptionsTable, Consumption>),
+    (
+      Consumption,
+      BaseReferences<_$AppDatabase, $ConsumptionsTable, Consumption>
+    ),
     Consumption,
     PrefetchHooks Function()> {
-  $$ConsumptionsTableTableManager(_$AppDb db, $ConsumptionsTable table)
+  $$ConsumptionsTableTableManager(_$AppDatabase db, $ConsumptionsTable table)
       : super(TableManagerState(
           db: db,
           table: table,
@@ -500,7 +505,7 @@ class $$ConsumptionsTableTableManager extends RootTableManager<
 }
 
 typedef $$ConsumptionsTableProcessedTableManager = ProcessedTableManager<
-    _$AppDb,
+    _$AppDatabase,
     $ConsumptionsTable,
     Consumption,
     $$ConsumptionsTableFilterComposer,
@@ -508,13 +513,16 @@ typedef $$ConsumptionsTableProcessedTableManager = ProcessedTableManager<
     $$ConsumptionsTableAnnotationComposer,
     $$ConsumptionsTableCreateCompanionBuilder,
     $$ConsumptionsTableUpdateCompanionBuilder,
-    (Consumption, BaseReferences<_$AppDb, $ConsumptionsTable, Consumption>),
+    (
+      Consumption,
+      BaseReferences<_$AppDatabase, $ConsumptionsTable, Consumption>
+    ),
     Consumption,
     PrefetchHooks Function()>;
 
-class $AppDbManager {
-  final _$AppDb _db;
-  $AppDbManager(this._db);
+class $AppDatabaseManager {
+  final _$AppDatabase _db;
+  $AppDatabaseManager(this._db);
   $$ConsumptionsTableTableManager get consumptions =>
       $$ConsumptionsTableTableManager(_db, _db.consumptions);
 }

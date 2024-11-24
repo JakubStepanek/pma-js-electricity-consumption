@@ -1,3 +1,4 @@
+import 'package:electricity_consumption_tracker/database/database.dart';
 import 'package:electricity_consumption_tracker/navigation/app_navigation.dart';
 import 'package:flutter/material.dart';
 import '../controllers/home_controller.dart'; // Import controlleru
@@ -5,6 +6,9 @@ import '../controllers/home_controller.dart'; // Import controlleru
 class HomeScreen extends StatelessWidget {
   final HomeController _controller =
       HomeController(); // Vytvoření instance controlleru
+
+  final AppDatabase db;
+  HomeScreen({required this.db});
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +97,7 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: AppNavigation(currentIndex: 0),
+      bottomNavigationBar: AppNavigation(db: db, currentIndex: 0),
     );
   }
 }
