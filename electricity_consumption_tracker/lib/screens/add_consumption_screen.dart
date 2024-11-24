@@ -4,10 +4,6 @@ import '../database/database.dart';
 import 'package:drift/drift.dart' as drift;
 
 class AddConsumptionScreen extends StatefulWidget {
-  final AppDatabase db;
-  // konstruktor AppDatabase
-  AddConsumptionScreen({required this.db});
-
   @override
   _AddConsumptionScreenState createState() => _AddConsumptionScreenState();
 }
@@ -18,22 +14,22 @@ class _AddConsumptionScreenState extends State<AddConsumptionScreen> {
   final _highTariffController = TextEditingController();
   final _outTariffController = TextEditingController();
 
-  void _saveConsumption() async {
-    if (_formKey.currentState!.validate()) {
-      final newConsumption = ConsumptionsCompanion(
-        date: drift.Value(DateTime.now()),
-        consumptionTarifLow:
-            drift.Value(double.parse(_lowTariffController.text)),
-        consumptionTarifHigh:
-            drift.Value(double.parse(_highTariffController.text)),
-        consumptionTarifOut:
-            drift.Value(double.parse(_outTariffController.text)),
-      );
+  // void _saveConsumption() async {
+  //   if (_formKey.currentState!.validate()) {
+  //     final newConsumption = ConsumptionsCompanion(
+  //       date: drift.Value(DateTime.now()),
+  //       consumptionTarifLow:
+  //           drift.Value(double.parse(_lowTariffController.text)),
+  //       consumptionTarifHigh:
+  //           drift.Value(double.parse(_highTariffController.text)),
+  //       consumptionTarifOut:
+  //           drift.Value(double.parse(_outTariffController.text)),
+  //     );
 
-      await widget.db.databaseHelper.insertConsumption(newConsumption);
-      Navigator.pop(context); // Návrat na předchozí obrazovku po uložení
-    }
-  }
+  //     await widget.db.databaseHelper.insertConsumption(newConsumption);
+  //     Navigator.pop(context); // Návrat na předchozí obrazovku po uložení
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +64,8 @@ class _AddConsumptionScreenState extends State<AddConsumptionScreen> {
               ),
               SizedBox(height: 16),
               ElevatedButton(
-                onPressed: _saveConsumption,
+                //onPressed: _saveConsumption,
+                onPressed: () => {},
                 child: Text('Uložit odečet'),
               ),
             ],
@@ -76,7 +73,6 @@ class _AddConsumptionScreenState extends State<AddConsumptionScreen> {
         ),
       ),
       bottomNavigationBar: AppNavigation(
-        db: widget.db,
         currentIndex: 2,
       ),
     );

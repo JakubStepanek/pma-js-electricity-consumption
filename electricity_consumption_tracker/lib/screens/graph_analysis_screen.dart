@@ -7,9 +7,6 @@ class GraphAnalysisScreen extends StatelessWidget {
   final HomeController _controller =
       HomeController(); // Vytvoření instance controlleru
 
-  final AppDatabase db;
-  GraphAnalysisScreen({required this.db});
-
   @override
   Widget build(BuildContext context) {
     final stats =
@@ -98,7 +95,6 @@ class GraphAnalysisScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: AppNavigation(
-        db: db,
         currentIndex: 3,
       ),
     );

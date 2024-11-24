@@ -3,9 +3,7 @@ import '../database/database.dart';
 import '../navigation/app_navigation.dart';
 
 class ConsumptionListScreen extends StatefulWidget {
-  final AppDatabase db;
-  // konstruktor AppDatabase
-  ConsumptionListScreen({required this.db});
+  
 
   @override
   _ConsumptionListScreenState createState() => _ConsumptionListScreenState();
@@ -154,7 +152,9 @@ class _ConsumptionListScreenState extends State<ConsumptionListScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: AppNavigation(db: widget.db, currentIndex: 1),
+      bottomNavigationBar: AppNavigation(
+        currentIndex: 1,
+      ),
     );
   }
 }
