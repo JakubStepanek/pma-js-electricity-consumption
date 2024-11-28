@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
 import '../database/database.dart';
-import '../database/tables/consumption_table.dart';
+import 'table/consumption_table.dart';
 
 part 'database_helper.g.dart';
 

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../controllers/home_controller.dart'; // Import controlleru
+import 'package:electricity_consumption_tracker/navigation/app_navigation.dart';
+import '../controller/home_controller.dart'; // Import controlleru
 
-class GraphAnalysisScreen extends StatelessWidget {
+class HomeScreen extends StatelessWidget {
   final HomeController _controller =
       HomeController(); // Vytvoření instance controlleru
 
@@ -11,7 +12,7 @@ class GraphAnalysisScreen extends StatelessWidget {
         _controller.getStatistics(); // Získání statistik z controlleru
 
     return Scaffold(
-      appBar: AppBar(title: Text('Spotřeba elektřiny')),
+      appBar: AppBar(title: const Text('Spotřeba elektřiny')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -91,6 +92,8 @@ class GraphAnalysisScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: AppNavigation(
       ),
     );
   }

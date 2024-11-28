@@ -16,6 +16,7 @@ dependencies:
   path_provider: ^2.0.0 # Získávání cesty k souborům
   path: ^1.8.3 # Práce s cestami k souborům
   drift_flutter: ^0.2.1
+  intl: ^0.20.1 # formátování datumu
 
 dev_dependencies:
   flutter_test:
