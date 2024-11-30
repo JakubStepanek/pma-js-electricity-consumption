@@ -83,8 +83,7 @@ class HomeScreen extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: () {
-                  _controller
-                      .addConsumptionRecord(); // Volání controlleru při stisku tlačítka
+                  Navigator.pushNamed(context, '/add_consumption');
                 },
                 icon: Icon(Icons.add),
                 label: Text('Přidat záznam'),

@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 
 class AppNavigation extends StatefulWidget {
-  // final int currentIndex;
-
-  // AppNavigation({this.currentIndex = 0});
-
   @override
   _AppNavigationState createState() => _AppNavigationState();
 }
@@ -13,7 +9,6 @@ class _AppNavigationState extends State<AppNavigation> {
   @override
   void initState() {
     super.initState();
-    //_currentIndex = widget.currentIndex; // Nastavení výchozího indexu
   }
 
   void _onItemTapped(int index) {

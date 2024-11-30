@@ -59,7 +59,7 @@ class _AddConsumptionScreenState extends State<AddConsumptionScreen> {
               ElevatedButton(
                 //onPressed: _saveConsumption,
                 onPressed: () {
-                  AddConsumption();
+                  addConsumption();
                 },
                 child: Text('Uložit odečet'),
               ),
@@ -70,7 +70,7 @@ class _AddConsumptionScreenState extends State<AddConsumptionScreen> {
     );
   }
 
-  void AddConsumption() {
+  void addConsumption() {
     final entity = ConsumptionsCompanion(
       date: drift.Value(DateTime.now()),
       consumptionTarifHigh:

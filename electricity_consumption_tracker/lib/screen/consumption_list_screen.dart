@@ -88,16 +88,18 @@ class _ConsumptionListScreenState extends State<ConsumptionListScreen> {
                                   icon: Icon(Icons.edit),
                                   color: Colors.blue,
                                   onPressed: () {
-                                    // Add edit functionality here
+                                    Navigator.pushNamed(
+                                        context, '/edit_consumption',
+                                        arguments: consumption.id);
                                   },
                                 ),
                                 IconButton(
-                                  icon: Icon(Icons.delete),
-                                  color: Colors.red,
-                                  onPressed: () {
-                                    // Add delete functionality here
-                                  },
-                                ),
+                                    icon: Icon(Icons.delete),
+                                    color: Colors.red,
+                                    onPressed: () async {
+                                      _deleteConsumption(
+                                          context, consumption.id);
+                                    }),
                               ],
                             ),
                           ],
@@ -111,5 +113,31 @@ class _ConsumptionListScreenState extends State<ConsumptionListScreen> {
         },
       ),
     );
+  }
+
+  Future<void> _deleteConsumption(
+      BuildContext context, int consumptionId) async {
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Smazat odečet'),
+        content: Text('Opravdu chcete tento odečet smazat?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text('Zrušit'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text('Smazat'),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldDelete ?? false) {
+      await _db.deleteConsumption(consumptionId);
+      setState(() {}); // Obnoví seznam odečtů
+    }
   }
 }

@@ -62,7 +62,7 @@ class _EditConsumptionScreenState extends State<EditConsumptionScreen> {
               ElevatedButton(
                 //onPressed: _saveConsumption,
                 onPressed: () {
-                  AddConsumption();
+                  editConsumption();
                 },
                 child: Text('Uložit odečet'),
               ),
@@ -73,21 +73,22 @@ class _EditConsumptionScreenState extends State<EditConsumptionScreen> {
     );
   }
 
-  void AddConsumption() {
+  void editConsumption() {
     final entity = ConsumptionsCompanion(
-      date: drift.Value(DateTime.now()),
+      id: drift.Value(widget.id),
+      date: drift.Value(_consumption.date),
       consumptionTarifHigh:
           drift.Value(double.parse(_highTariffController.text)),
       consumptionTarifLow: drift.Value(double.parse(_lowTariffController.text)),
       consumptionTarifOut: drift.Value(double.parse(_outTariffController.text)),
     );
 
-    _db.insertConsumption(entity).then(
+    _db.updateConsumption(entity).then(
           (value) => ScaffoldMessenger.of(context).showMaterialBanner(
             MaterialBanner(
               backgroundColor: const Color.fromARGB(255, 5, 134, 72),
               content: Text(
-                'Odečet uložen: $value',
+                'Odečet aktualizován: $value',
                 style: const TextStyle(color: Colors.white),
               ),
               actions: [

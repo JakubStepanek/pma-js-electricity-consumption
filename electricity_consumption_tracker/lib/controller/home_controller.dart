@@ -1,3 +1,7 @@
+import 'package:electricity_consumption_tracker/navigation/app_navigation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:path/path.dart';
+
 class HomeController {
   // Získání aktuální spotřeby za rok
   int getCurrentYearConsumption() {
@@ -16,9 +20,8 @@ class HomeController {
     };
   }
 
-  // Přidání nového záznamu spotřeby
+  
   void addConsumptionRecord() {
-    // Logika pro přidání záznamu
-    print('Nový záznam byl přidán!');
+    AppNavigation();
   }
 }
