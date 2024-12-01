@@ -1,19 +1,24 @@
 import 'package:electricity_consumption_tracker/route/route_generator.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
+import 'package:provider/provider.dart';
 import './database/database.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  print('Initializing database...');
-  final database = await AppDatabase();
 
   print('Database initialized: \$database');
-  runApp(ElectricityConsumptionApp(db: database));
+  runApp(
+    Provider(
+      create: (context) => AppDatabase(),
+      child: ElectricityConsumptionApp(),
+      dispose: (context, AppDatabase db) => db.close(),
+    ),
+  );
 }
 
 class ElectricityConsumptionApp extends StatelessWidget {
-  final AppDatabase db;
-  ElectricityConsumptionApp({required this.db});
+  ElectricityConsumptionApp();
 
   @override
   Widget build(BuildContext context) {

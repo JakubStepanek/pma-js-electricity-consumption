@@ -30,6 +30,10 @@ class AppDatabase extends _$AppDatabase {
     return await select(consumptions).get();
   }
 
+  Stream<List<Consumption>> getConsumptionStream() {
+    return select(consumptions).watch();
+  }
+
   Future<Consumption> getConsumption(int id) async {
     return await (select(consumptions)..where((tbl) => tbl.id.equals(id)))
         .getSingle();

@@ -3,6 +3,7 @@ import 'package:electricity_consumption_tracker/navigation/app_navigation.dart';
 import '../controller/home_controller.dart'; // Import controlleru
 
 class HomeScreen extends StatelessWidget {
+  int index = 0;
   final HomeController _controller =
       HomeController(); // Vytvoření instance controlleru
 
@@ -86,14 +87,13 @@ class HomeScreen extends StatelessWidget {
                   Navigator.pushNamed(context, '/add_consumption');
                 },
                 icon: Icon(Icons.add),
-                label: Text('Přidat záznam'),
+                label: Text('Přidat odečet'),
               ),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: AppNavigation(
-      ),
+      bottomNavigationBar: AppNavigation(),
     );
   }
 }

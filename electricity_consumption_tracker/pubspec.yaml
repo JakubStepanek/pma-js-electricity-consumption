@@ -17,6 +17,7 @@ dependencies:
   path: ^1.8.3 # Práce s cestami k souborům
   drift_flutter: ^0.2.1
   intl: ^0.20.1 # formátování datumu
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:
