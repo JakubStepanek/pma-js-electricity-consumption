@@ -21,7 +21,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             // Spotřeba za aktuální rok
             Text(
-              'Spotřeba za aktuální rok: ${_controller.getCurrentYearConsumption()} kWh',
+              'Spotřeba za aktuální rok: ${_controller.getCurrentYearTotalConsumption()} kWh',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 16),
@@ -48,32 +48,96 @@ class HomeScreen extends StatelessWidget {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),
-            Row(
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                          'Průměrná měsíční spotřeba: ${stats['averageMonthly']} kWh',
-                          style: TextStyle(fontSize: 16)),
-                      Text('Nejvyšší spotřeba: ${stats['highest']} kWh',
-                          style: TextStyle(fontSize: 16)),
-                    ],
-                  ),
+                Text(
+                  'Za poslední měsíc:',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
-                SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Nejnižší spotřeba: ${stats['lowest']} kWh',
-                          style: TextStyle(fontSize: 16)),
-                      Text('Počet dnů měření: ${stats['daysCount']}',
-                          style: TextStyle(fontSize: 16)),
-                    ],
-                  ),
+                SizedBox(height: 8),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Nízký tarif [kW/h]:',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            '${stats['lowTarif']}',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Vysoký tarif [kW/h]:',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            '${stats['highTarif']}',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Prodejní tarif [kW/h]:',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            '${stats['sellingTarif']}',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

@@ -19,7 +19,7 @@ class GraphAnalysisScreen extends StatelessWidget {
           children: [
             // Spotřeba za aktuální rok
             Text(
-              'Spotřeba za aktuální rok: ${_controller.getCurrentYearConsumption()} kWh',
+              'Spotřeba za aktuální rok: ${_controller.getCurrentYearTotalConsumption()} kWh',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 16),

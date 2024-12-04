@@ -74,7 +74,7 @@ class _ConsumptionListScreenState extends State<ConsumptionListScreen> {
                                 Text(
                                     'Vysoký tarif: ${consumption.consumptionTarifHigh.toString()} kWh'),
                                 Text(
-                                    'Prodejní tarif: ${consumption.consumptionTarifOut.toString()} kWh'),
+                                    'Prodejní tarif: ${consumption.consumptionTarifOut == null ? 0 : consumption.consumptionTarifOut.toString()} kWh'),
                               ],
                             ),
                             // Icons for actions

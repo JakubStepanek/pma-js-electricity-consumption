@@ -82,7 +82,7 @@ class _EditConsumptionScreenState extends State<EditConsumptionScreen> {
         consumptionTarifLow:
             drift.Value(double.parse(_lowTariffController.text)),
         consumptionTarifOut:
-            drift.Value(double.parse(_outTariffController.text)),
+            drift.Value(double.tryParse(_outTariffController.text ?? '')),
       );
 
       Provider.of<AppDatabase>(context, listen: false)
@@ -112,8 +112,8 @@ class _EditConsumptionScreenState extends State<EditConsumptionScreen> {
   }
 
   Future<void> getConsumption() async {
-    _consumption =
-        await Provider.of<AppDatabase>(context, listen: false).getConsumption(widget.id);
+    _consumption = await Provider.of<AppDatabase>(context, listen: false)
+        .getConsumption(widget.id);
     _highTariffController.text = _consumption.consumptionTarifHigh.toString();
     _lowTariffController.text = _consumption.consumptionTarifLow.toString();
     _outTariffController.text = _consumption.consumptionTarifOut.toString();

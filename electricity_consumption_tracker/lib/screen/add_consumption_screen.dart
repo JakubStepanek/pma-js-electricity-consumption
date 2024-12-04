@@ -77,10 +77,12 @@ class _AddConsumptionScreenState extends State<AddConsumptionScreen> {
         consumptionTarifLow:
             drift.Value(double.parse(_lowTariffController.text)),
         consumptionTarifOut:
-            drift.Value(double.parse(_outTariffController.text)),
+            drift.Value(double.tryParse(_outTariffController.text ?? '')),
       );
 
-      Provider.of<AppDatabase>(context, listen: false).insertConsumption(entity).then(
+      Provider.of<AppDatabase>(context, listen: false)
+          .insertConsumption(entity)
+          .then(
             (value) => ScaffoldMessenger.of(context).showMaterialBanner(
               MaterialBanner(
                 backgroundColor: const Color.fromARGB(255, 5, 134, 72),

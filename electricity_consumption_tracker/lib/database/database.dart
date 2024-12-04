@@ -5,7 +5,6 @@ import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'table/consumption_table.dart';
-import 'database_helper.dart';
 
 part 'database.g.dart';
 
@@ -38,6 +37,34 @@ class AppDatabase extends _$AppDatabase {
     return await (select(consumptions)..where((tbl) => tbl.id.equals(id)))
         .getSingle();
   }
+
+// funkce pro získání nejvyšší hodnoty pro vysoký tarif v roce
+  Future<double?> getHighTarifHighestValueOfYear(int year) async {
+    return await (selectOnly(consumptions)
+          ..addColumns([consumptions.consumptionTarifHigh])
+          ..where(consumptions.date.year.equals(year))
+          ..orderBy([
+            OrderingTerm(
+                expression: consumptions.consumptionTarifHigh,
+                mode: OrderingMode.desc)
+          ])
+          ..limit(1))
+        .map((row) => row.read(consumptions.consumptionTarifHigh))
+        .getSingleOrNull();
+
+    
+  }
+
+// funkce pro získání spotřeby vysokého tarifu v roce
+
+Future<double?> getHighTarifSumOfYear(int year) async {
+  return await (selectOnly(consumptions)
+        ..addColumns([consumptions.consumptionTarifHigh.sum()])
+        ..where(consumptions.date.year.equals(year)))
+      .map((row) => row.read(consumptions.consumptionTarifHigh.sum()))
+      .getSingleOrNull();
+}
+
 
   Future<bool> updateConsumption(ConsumptionsCompanion entity) async {
     return await update(consumptions).replace(entity);
