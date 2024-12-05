@@ -3,7 +3,7 @@ import '../controller/home_controller.dart'; // Import controlleru
 
 class GraphAnalysisScreen extends StatelessWidget {
   final HomeController _controller =
-      HomeController(); // Vytvoření instance controlleru
+      HomeController(null!); // Vytvoření instance controlleru
 
   @override
   Widget build(BuildContext context) {

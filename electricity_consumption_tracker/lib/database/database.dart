@@ -8,6 +8,7 @@ import 'table/consumption_table.dart';
 
 part 'database.g.dart';
 
+// Fake repository
 // Funkce pro vytvoření připojení k databázi
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
@@ -51,20 +52,31 @@ class AppDatabase extends _$AppDatabase {
           ..limit(1))
         .map((row) => row.read(consumptions.consumptionTarifHigh))
         .getSingleOrNull();
+  }
 
-    
+  Stream<double?> getHighTarifHighestValueOfYearStream(int year) {
+    return (selectOnly(consumptions)
+          ..addColumns([consumptions.consumptionTarifHigh])
+          ..where(consumptions.date.year.equals(year))
+          ..orderBy([
+            OrderingTerm(
+                expression: consumptions.consumptionTarifHigh,
+                mode: OrderingMode.desc)
+          ])
+          ..limit(1))
+        .map((row) => row.read(consumptions.consumptionTarifHigh))
+        .watchSingleOrNull();
   }
 
 // funkce pro získání spotřeby vysokého tarifu v roce
 
-Future<double?> getHighTarifSumOfYear(int year) async {
-  return await (selectOnly(consumptions)
-        ..addColumns([consumptions.consumptionTarifHigh.sum()])
-        ..where(consumptions.date.year.equals(year)))
-      .map((row) => row.read(consumptions.consumptionTarifHigh.sum()))
-      .getSingleOrNull();
-}
-
+  Future<double?> getHighTarifSumOfYear(int year) async {
+    return await (selectOnly(consumptions)
+          ..addColumns([consumptions.consumptionTarifHigh.sum()])
+          ..where(consumptions.date.year.equals(year)))
+        .map((row) => row.read(consumptions.consumptionTarifHigh.sum()))
+        .getSingleOrNull();
+  }
 
   Future<bool> updateConsumption(ConsumptionsCompanion entity) async {
     return await update(consumptions).replace(entity);

@@ -1,12 +1,17 @@
+import 'package:electricity_consumption_tracker/database/database.dart';
 import 'package:electricity_consumption_tracker/navigation/app_navigation.dart';
 
 class HomeController {
-final int currentYear = DateTime.now().year;
+  final int currentYear = DateTime.now().year;
+  final AppDatabase _db;
+
+  HomeController(this._db);
 
   // Získání aktuální spotřeby za rok
-  double getCurrentYearTotalConsumption() {
-    return 0;
+  Stream<double?> getCurrentYearTotalConsumption() {
+    return _db.getHighTarifHighestValueOfYearStream(currentYear);
   }
+
   // Statistiky
   Map<String, dynamic> getStatistics() {
     // Simulovaná data statistik
@@ -18,7 +23,6 @@ final int currentYear = DateTime.now().year;
     };
   }
 
-  
   void addConsumptionRecord() {
     AppNavigation();
   }

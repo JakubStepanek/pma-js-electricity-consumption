@@ -1,6 +1,5 @@
 import 'package:electricity_consumption_tracker/route/route_generator.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import './database/database.dart';
 
@@ -9,7 +8,7 @@ void main() async {
 
   print('Database initialized: \$database');
   runApp(
-    Provider(
+    Provider<AppDatabase>(
       create: (context) => AppDatabase(),
       child: ElectricityConsumptionApp(),
       dispose: (context, AppDatabase db) => db.close(),

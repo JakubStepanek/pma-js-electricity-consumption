@@ -14,12 +14,13 @@ class AddConsumptionScreen extends StatefulWidget {
 
 class _AddConsumptionScreenState extends State<AddConsumptionScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _lowTariffController = TextEditingController();
+  late final _lowTariffController;
   final _highTariffController = TextEditingController();
   final _outTariffController = TextEditingController();
 
   @override
   void initState() {
+    _lowTariffController = TextEditingController();
     super.initState();
   }
 

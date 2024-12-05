@@ -1,16 +1,34 @@
+import 'package:electricity_consumption_tracker/database/database.dart';
 import 'package:flutter/material.dart';
 import 'package:electricity_consumption_tracker/navigation/app_navigation.dart';
+import 'package:provider/provider.dart';
 import '../controller/home_controller.dart'; // Import controlleru
 
-class HomeScreen extends StatelessWidget {
-  int index = 0;
-  final HomeController _controller =
-      HomeController(); // Vytvoření instance controlleru
+class HomeScreen extends StatefulWidget {
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
 
+class _HomeScreenState extends State<HomeScreen> {
+  int index = 0;
+
+  late HomeController _controller;
+
+  @override
+  void initState() {
+    // To se volá jenom jednou při vytvoření
+    super.initState();
+    final db = Provider.of<AppDatabase>(context, listen: false);
+    _controller = HomeController(db);
+  }
+
+  // Vytvoření instance controlleru
   @override
   Widget build(BuildContext context) {
     final stats =
         _controller.getStatistics(); // Získání statistik z controlleru
+
+    final TextTheme textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Spotřeba elektřiny')),
@@ -20,10 +38,22 @@ class HomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Spotřeba za aktuální rok
-            Text(
-              'Spotřeba za aktuální rok: ${_controller.getCurrentYearTotalConsumption()} kWh',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
+            StreamBuilder<double?>(
+                stream: _controller.getCurrentYearTotalConsumption(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return const Text("Chyba");
+                  }
+
+                  if (!snapshot.hasData) {
+                    return const CircularProgressIndicator();
+                  }
+
+                  return Text(
+                    'Spotřeba za aktuální rok: ${snapshot.data} kWh',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  );
+                }),
             SizedBox(height: 16),
 
             // Placeholder pro graf
@@ -65,7 +95,7 @@ class HomeScreen extends StatelessWidget {
                         children: [
                           Text(
                             'Nízký tarif [kW/h]:',
-                            style: TextStyle(fontSize: 16),
+                            style: textTheme.bodyLarge,
                           ),
                         ],
                       ),
@@ -76,14 +106,14 @@ class HomeScreen extends StatelessWidget {
                         children: [
                           Text(
                             '${stats['lowTarif']}',
-                            style: TextStyle(fontSize: 16),
+                            style: textTheme.bodyLarge
                           ),
                         ],
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 8),
+               const SizedBox(height: 8),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -93,7 +123,7 @@ class HomeScreen extends StatelessWidget {
                         children: [
                           Text(
                             'Vysoký tarif [kW/h]:',
-                            style: TextStyle(fontSize: 16),
+                            style: textTheme.bodyLarge
                           ),
                         ],
                       ),
@@ -111,7 +141,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -141,7 +171,7 @@ class HomeScreen extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
 
             // Tlačítko pro přidání záznamu
             SizedBox(
