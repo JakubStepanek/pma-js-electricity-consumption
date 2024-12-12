@@ -26,11 +26,12 @@ class AppDatabase extends _$AppDatabase {
   @override
   int get schemaVersion => 1;
 
+  ///CRUD
   Future<List<Consumption>> getConsumptions() async {
     return await select(consumptions).get();
   }
 
-  Stream<List<Consumption>> getConsumptionStream() {
+  Stream<List<Consumption>> getConsumptionsStream() {
     return select(consumptions).watch();
   }
 
@@ -39,19 +40,25 @@ class AppDatabase extends _$AppDatabase {
         .getSingle();
   }
 
-// funkce pro získání nejvyšší hodnoty pro vysoký tarif v roce
-  Future<double?> getHighTarifHighestValueOfYear(int year) async {
-    return await (selectOnly(consumptions)
-          ..addColumns([consumptions.consumptionTarifHigh])
-          ..where(consumptions.date.year.equals(year))
-          ..orderBy([
-            OrderingTerm(
-                expression: consumptions.consumptionTarifHigh,
-                mode: OrderingMode.desc)
-          ])
-          ..limit(1))
-        .map((row) => row.read(consumptions.consumptionTarifHigh))
-        .getSingleOrNull();
+  Future<bool> updateConsumption(ConsumptionsCompanion entity) async {
+    return await update(consumptions).replace(entity);
+  }
+
+  Future<int> insertConsumption(ConsumptionsCompanion entity) async {
+    return await into(consumptions).insert(entity);
+  }
+
+  Future<int> deleteConsumption(int id) async {
+    return await (delete(consumptions)..where((tbl) => tbl.id.equals(id))).go();
+  }
+
+  // funkce pro získání spotřeby vysokého tarifu v roce
+  Stream<double?> getHighTarifSumOfYear(int year) {
+    return (selectOnly(consumptions)
+          ..addColumns([consumptions.consumptionTarifHigh.sum()])
+          ..where(consumptions.date.year.equals(year)))
+        .watchSingleOrNull()
+        .map((row) => row?.read(consumptions.consumptionTarifHigh.sum()));
   }
 
   Stream<double?> getHighTarifHighestValueOfYearStream(int year) {
@@ -68,25 +75,45 @@ class AppDatabase extends _$AppDatabase {
         .watchSingleOrNull();
   }
 
-// funkce pro získání spotřeby vysokého tarifu v roce
-
-  Future<double?> getHighTarifSumOfYear(int year) async {
+  // funkce pro získání nejvyšší hodnoty pro vysoký tarif v roce
+  Future<double?> getHighTarifHighestValueOfYear(int year) async {
     return await (selectOnly(consumptions)
-          ..addColumns([consumptions.consumptionTarifHigh.sum()])
-          ..where(consumptions.date.year.equals(year)))
-        .map((row) => row.read(consumptions.consumptionTarifHigh.sum()))
+          ..addColumns([consumptions.consumptionTarifHigh])
+          ..where(consumptions.date.year.equals(year))
+          ..orderBy([
+            OrderingTerm(
+                expression: consumptions.consumptionTarifHigh,
+                mode: OrderingMode.desc)
+          ])
+          ..limit(1))
+        .map((row) => row.read(consumptions.consumptionTarifHigh))
         .getSingleOrNull();
   }
 
-  Future<bool> updateConsumption(ConsumptionsCompanion entity) async {
-    return await update(consumptions).replace(entity);
-  }
+  //TODO: Get SUM ...
+  Stream<double?> getSumOfColumnForMonthAndYear(
+      String columnName, int month, int year) {
+    // Mapování názvů sloupců na jejich odpovídající `GeneratedColumn<double>`
+    final Map<String, GeneratedColumn<double>> columnMap = {
+      'consumptionTarifHigh': consumptions.consumptionTarifHigh,
+      'consumptionTarifLow': consumptions.consumptionTarifLow,
+      'consumptionTarifOut': consumptions.consumptionTarifOut,
+    };
 
-  Future<int> insertConsumption(ConsumptionsCompanion entity) async {
-    return await into(consumptions).insert(entity);
-  }
+    // Získání sloupce podle názvu
+    final column = columnMap[columnName];
+    if (column == null) {
+      throw ArgumentError('Sloupec "$columnName" nebyl nalezen.');
+    }
 
-  Future<int> deleteConsumption(int id) async {
-    return await (delete(consumptions)..where((tbl) => tbl.id.equals(id))).go();
+    // Sestavení dotazu
+    return (selectOnly(consumptions)
+          ..addColumns([column.sum()])
+          ..where(
+              consumptions.date.month.equals(month))
+          ..where(consumptions.date.year.equals(year))) 
+        .watchSingleOrNull()
+        .map((row) =>
+            row?.read(column.sum()));
   }
 }

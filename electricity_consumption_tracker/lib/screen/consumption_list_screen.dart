@@ -27,7 +27,7 @@ class _ConsumptionListScreenState extends State<ConsumptionListScreen> {
         title: Text('Seznam odečtů'),
       ),
       body: StreamBuilder<List<Consumption>>(
-        stream: Provider.of<AppDatabase>(context).getConsumptionStream(),
+        stream: Provider.of<AppDatabase>(context).getConsumptionsStream(),
         builder: (context, snapshot) {
           final List<Consumption>? consumptions = snapshot.data;
 

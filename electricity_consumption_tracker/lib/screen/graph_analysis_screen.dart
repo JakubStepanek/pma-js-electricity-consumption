@@ -7,8 +7,6 @@ class GraphAnalysisScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final stats =
-        _controller.getStatistics(); // Získání statistik z controlleru
 
     return Scaffold(
       appBar: AppBar(title: Text('Spotřeba elektřiny')),
@@ -53,11 +51,6 @@ class GraphAnalysisScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                          'Průměrná měsíční spotřeba: ${stats['averageMonthly']} kWh',
-                          style: TextStyle(fontSize: 16)),
-                      Text('Nejvyšší spotřeba: ${stats['highest']} kWh',
-                          style: TextStyle(fontSize: 16)),
                     ],
                   ),
                 ),
@@ -66,10 +59,6 @@ class GraphAnalysisScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Nejnižší spotřeba: ${stats['lowest']} kWh',
-                          style: TextStyle(fontSize: 16)),
-                      Text('Počet dnů měření: ${stats['daysCount']}',
-                          style: TextStyle(fontSize: 16)),
                     ],
                   ),
                 ),

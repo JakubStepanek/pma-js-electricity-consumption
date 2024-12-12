@@ -33,5 +33,3 @@ class ElectricityConsumptionApp extends StatelessWidget {
   }
 }
 
-
-//TODO: načtení dat ze souboru... data musí mít strukturu DATUM|VYSOKÝ|NÍZKÝ|PRODEJ?

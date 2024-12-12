@@ -3,24 +3,29 @@ import 'package:electricity_consumption_tracker/navigation/app_navigation.dart';
 
 class HomeController {
   final int currentYear = DateTime.now().year;
+  final int currentMonth = DateTime.now().month - 1;
   final AppDatabase _db;
 
   HomeController(this._db);
 
   // Získání aktuální spotřeby za rok
   Stream<double?> getCurrentYearTotalConsumption() {
-    return _db.getHighTarifHighestValueOfYearStream(currentYear);
+    return _db.getHighTarifSumOfYear(currentYear);
   }
 
-  // Statistiky
-  Map<String, dynamic> getStatistics() {
-    // Simulovaná data statistik
-    return {
-      'averageMonthly': 104.2,
-      'highest': 150,
-      'lowest': 80,
-      'daysCount': 365,
-    };
+  Stream<double?> getLastMonthLowTarif() {
+    return _db.getSumOfColumnForMonthAndYear(
+        'consumptionTarifLow', currentMonth, currentYear);
+  }
+
+  Stream<double?> getLastMonthHighTarif() {
+    return _db.getSumOfColumnForMonthAndYear(
+        'consumptionTarifHigh', currentMonth, currentYear);
+  }
+
+  Stream<double?> getLastMonthOutTarif() {
+    return _db.getSumOfColumnForMonthAndYear(
+        'consumptionTarifOut', currentMonth, currentYear);
   }
 
   void addConsumptionRecord() {

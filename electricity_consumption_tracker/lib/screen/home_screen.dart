@@ -1,4 +1,5 @@
 import 'package:electricity_consumption_tracker/database/database.dart';
+import 'package:electricity_consumption_tracker/utils/initialize_consumptions.dart';
 import 'package:flutter/material.dart';
 import 'package:electricity_consumption_tracker/navigation/app_navigation.dart';
 import 'package:provider/provider.dart';
@@ -20,14 +21,12 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     final db = Provider.of<AppDatabase>(context, listen: false);
     _controller = HomeController(db);
+    initializeConsumptions(db);
   }
 
   // Vytvoření instance controlleru
   @override
   Widget build(BuildContext context) {
-    final stats =
-        _controller.getStatistics(); // Získání statistik z controlleru
-
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
@@ -37,55 +36,33 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Spotřeba za aktuální rok
-            StreamBuilder<double?>(
-                stream: _controller.getCurrentYearTotalConsumption(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return const Text("Chyba");
-                  }
+            // // Placeholder pro graf
+            // Container(
+            //   height: 200,
+            //   decoration: BoxDecoration(
+            //     color: Colors.grey[200],
+            //     borderRadius: BorderRadius.circular(10),
+            //   ),
+            //   child: Center(
+            //     child: Text(
+            //       'Graf spotřeby',
+            //       style: TextStyle(color: Colors.grey, fontSize: 16),
+            //     ),
+            //   ),
+            // ),
 
-                  if (!snapshot.hasData) {
-                    return const CircularProgressIndicator();
-                  }
-
-                  return Text(
-                    'Spotřeba za aktuální rok: ${snapshot.data} kWh',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  );
-                }),
-            SizedBox(height: 16),
-
-            // Placeholder pro graf
-            Container(
-              height: 200,
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(
-                child: Text(
-                  'Graf spotřeby',
-                  style: TextStyle(color: Colors.grey, fontSize: 16),
-                ),
-              ),
-            ),
             SizedBox(height: 16),
 
             // Statistiky
             Text(
-              'Statistiky:',
+              'Součet za poslední měsíc:',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Za poslední měsíc:',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -93,10 +70,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Nízký tarif [kW/h]:',
-                            style: textTheme.bodyLarge,
-                          ),
+                          const Text('Nízký tarif [kW/h]: ',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.normal))
                         ],
                       ),
                     ),
@@ -104,38 +80,24 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text(
-                            '${stats['lowTarif']}',
-                            style: textTheme.bodyLarge
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-               const SizedBox(height: 8),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Vysoký tarif [kW/h]:',
-                            style: textTheme.bodyLarge
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            '${stats['highTarif']}',
-                            style: TextStyle(fontSize: 16),
-                          ),
+                          StreamBuilder<double?>(
+                              stream: _controller.getLastMonthLowTarif(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasError) {
+                                  return const Text("Chyba");
+                                }
+
+                                if (!snapshot.hasData) {
+                                  return const CircularProgressIndicator();
+                                }
+
+                                return Text(
+                                  '${snapshot.data} kWh',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.normal),
+                                );
+                              }),
                         ],
                       ),
                     ),
@@ -149,10 +111,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Prodejní tarif [kW/h]:',
-                            style: TextStyle(fontSize: 16),
-                          ),
+                          Text('Vysoký tarif [kW/h]:',
+                              style: textTheme.bodyLarge),
                         ],
                       ),
                     ),
@@ -160,10 +120,64 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text(
-                            '${stats['sellingTarif']}',
-                            style: TextStyle(fontSize: 16),
-                          ),
+                          StreamBuilder<double?>(
+                              stream: _controller.getLastMonthHighTarif(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasError) {
+                                  return const Text("Chyba");
+                                }
+
+                                if (!snapshot.hasData) {
+                                  return const CircularProgressIndicator();
+                                }
+
+                                return Text(
+                                  '${snapshot.data} kWh',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.normal),
+                                );
+                              }),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Prodejní tarif [kW/h]:',
+                              style: textTheme.bodyLarge),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          StreamBuilder<double?>(
+                              stream: _controller.getLastMonthOutTarif(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasError) {
+                                  return const Text("Chyba");
+                                }
+
+                                if (!snapshot.hasData) {
+                                  return const CircularProgressIndicator();
+                                }
+
+                                return Text(
+                                  '${snapshot.data} kWh',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.normal),
+                                );
+                              }),
                         ],
                       ),
                     ),
