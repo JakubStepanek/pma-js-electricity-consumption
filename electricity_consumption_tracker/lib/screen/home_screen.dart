@@ -1,5 +1,6 @@
 import 'package:electricity_consumption_tracker/database/database.dart';
 import 'package:electricity_consumption_tracker/utils/initialize_consumptions.dart';
+import 'package:electricity_consumption_tracker/widget/graph.dart';
 import 'package:flutter/material.dart';
 import 'package:electricity_consumption_tracker/navigation/app_navigation.dart';
 import 'package:provider/provider.dart';
@@ -29,27 +30,17 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
 
-    return Scaffold(
+    return 
+    
+    Scaffold(
       appBar: AppBar(title: const Text('Spotřeba elektřiny')),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // // Placeholder pro graf
-            // Container(
-            //   height: 200,
-            //   decoration: BoxDecoration(
-            //     color: Colors.grey[200],
-            //     borderRadius: BorderRadius.circular(10),
-            //   ),
-            //   child: Center(
-            //     child: Text(
-            //       'Graf spotřeby',
-            //       style: TextStyle(color: Colors.grey, fontSize: 16),
-            //     ),
-            //   ),
-            // ),
+            // Graph
+            YearlyConsumptionChart(),
 
             SizedBox(height: 16),
 
