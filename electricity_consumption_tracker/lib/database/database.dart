@@ -109,11 +109,21 @@ class AppDatabase extends _$AppDatabase {
     // Sestavení dotazu
     return (selectOnly(consumptions)
           ..addColumns([column.sum()])
-          ..where(
-              consumptions.date.month.equals(month))
-          ..where(consumptions.date.year.equals(year))) 
+          ..where(consumptions.date.month.equals(month))
+          ..where(consumptions.date.year.equals(year)))
         .watchSingleOrNull()
-        .map((row) =>
-            row?.read(column.sum()));
+        .map((row) => row?.read(column.sum()));
+  }
+
+  Future<List<int>> getUniqueYears() async {
+    final query = selectOnly(consumptions, distinct: true)
+      ..addColumns([consumptions.date.year])
+      ..orderBy([OrderingTerm(expression: consumptions.date.year)]);
+
+    final result =
+        await query.map((row) => row.read(consumptions.date.year)).get();
+
+    // Odstranění null hodnot a vrácení seznamu typu List<int>
+    return result.whereType<int>().toList();
   }
 }
