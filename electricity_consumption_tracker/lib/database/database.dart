@@ -90,31 +90,6 @@ class AppDatabase extends _$AppDatabase {
         .getSingleOrNull();
   }
 
-  //TODO: Get SUM ...
-  Stream<double?> getSumOfColumnForMonthAndYear(
-      String columnName, int month, int year) {
-    // Mapování názvů sloupců na jejich odpovídající `GeneratedColumn<double>`
-    final Map<String, GeneratedColumn<double>> columnMap = {
-      'consumptionTarifHigh': consumptions.consumptionTarifHigh,
-      'consumptionTarifLow': consumptions.consumptionTarifLow,
-      'consumptionTarifOut': consumptions.consumptionTarifOut,
-    };
-
-    // Získání sloupce podle názvu
-    final column = columnMap[columnName];
-    if (column == null) {
-      throw ArgumentError('Sloupec "$columnName" nebyl nalezen.');
-    }
-
-    // Sestavení dotazu
-    return (selectOnly(consumptions)
-          ..addColumns([column.sum()])
-          ..where(consumptions.date.month.equals(month))
-          ..where(consumptions.date.year.equals(year)))
-        .watchSingleOrNull()
-        .map((row) => row?.read(column.sum()));
-  }
-
   Future<List<int>> getUniqueYears() async {
     final query = selectOnly(consumptions, distinct: true)
       ..addColumns([consumptions.date.year])
@@ -122,8 +97,27 @@ class AppDatabase extends _$AppDatabase {
 
     final result =
         await query.map((row) => row.read(consumptions.date.year)).get();
+    return result.whereType<int>().toList(); // Odstranění null hodnot
+  }
 
-    // Odstranění null hodnot a vrácení seznamu typu List<int>
-    return result.whereType<int>().toList();
+  Stream<double?> getSumOfColumnForMonthAndYear(
+      String columnName, int month, int year) {
+    final Map<String, GeneratedColumn<double>> columnMap = {
+      'consumptionTarifHigh': consumptions.consumptionTarifHigh,
+      'consumptionTarifLow': consumptions.consumptionTarifLow,
+      'consumptionTarifOut': consumptions.consumptionTarifOut,
+    };
+
+    final column = columnMap[columnName];
+    if (column == null) {
+      throw ArgumentError('Sloupec "$columnName" nebyl nalezen.');
+    }
+
+    return (selectOnly(consumptions)
+          ..addColumns([column.sum()])
+          ..where(consumptions.date.month.equals(month))
+          ..where(consumptions.date.year.equals(year)))
+        .watchSingleOrNull()
+        .map((row) => row?.read(column.sum()));
   }
 }
