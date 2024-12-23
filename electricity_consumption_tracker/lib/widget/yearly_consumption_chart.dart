@@ -1,15 +1,12 @@
-import 'package:electricity_consumption_tracker/controller/graph_controller.dart';
-import 'package:electricity_consumption_tracker/database/database.dart';
+import 'package:electricity_consumption_tracker/controller/home_controller.dart';
 import 'package:electricity_consumption_tracker/utils/extensions/color_extensions.dart';
-import 'package:electricity_consumption_tracker/utils/initialize_consumptions.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../resources/app_colors.dart';
 
 class YearlyConsumptionChart extends StatefulWidget {
-  final GraphController controller;
+  final HomeController controller;
   final int year;
 
   const YearlyConsumptionChart({

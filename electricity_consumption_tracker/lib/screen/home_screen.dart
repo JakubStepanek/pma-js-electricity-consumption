@@ -1,6 +1,4 @@
-import 'package:electricity_consumption_tracker/controller/graph_controller.dart';
 import 'package:electricity_consumption_tracker/database/database.dart';
-import 'package:electricity_consumption_tracker/utils/initialize_consumptions.dart';
 import 'package:electricity_consumption_tracker/widget/yearly_consumption_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:electricity_consumption_tracker/navigation/app_navigation.dart';
@@ -15,7 +13,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int index = 0;
 
-  late GraphController _graphController;
+  // late GraphController _graphController;
   late HomeController _controller;
 
   @override
@@ -24,11 +22,8 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     final db = Provider.of<AppDatabase>(context, listen: false);
     _controller = HomeController(db);
-    //initializeConsumptions(db);
-    _graphController = GraphController(db);
   }
 
-  // Vytvoření instance controlleru
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
@@ -42,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             // Graph
             YearlyConsumptionChart(
-              controller: _graphController,
+              controller: _controller,
               year: DateTime.now().year,
             ),
 

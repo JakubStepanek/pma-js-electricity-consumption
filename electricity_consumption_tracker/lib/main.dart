@@ -5,8 +5,6 @@ import './database/database.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  print('Database initialized: \$database');
   runApp(
     Provider<AppDatabase>(
       create: (context) => AppDatabase(),
@@ -32,4 +30,3 @@ class ElectricityConsumptionApp extends StatelessWidget {
     );
   }
 }
-
