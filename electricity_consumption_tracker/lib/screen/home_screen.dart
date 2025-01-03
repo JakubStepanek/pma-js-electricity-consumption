@@ -11,17 +11,19 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int index = 0;
-
-  // late GraphController _graphController;
   late HomeController _controller;
 
   @override
   void initState() {
-    // To se volá jenom jednou při vytvoření
     super.initState();
     final db = Provider.of<AppDatabase>(context, listen: false);
     _controller = HomeController(db);
+  }
+
+  @override
+  void dispose() {
+    //_controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -40,7 +42,6 @@ class _HomeScreenState extends State<HomeScreen> {
               controller: _controller,
               year: DateTime.now().year,
             ),
-
             SizedBox(height: 16),
 
             // Statistiky

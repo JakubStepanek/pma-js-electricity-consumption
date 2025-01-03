@@ -56,4 +56,9 @@ class HomeController {
   Future<List<int>> getUniqueYears() {
     return _db.getUniqueYears();
   }
+
+  Stream<List<double>> getMonthlySumOfColumnForYear(
+      String columnName, int year) {
+    return _db.getMonthlySumOfColumnForYear(columnName, year);
+  }
 }
