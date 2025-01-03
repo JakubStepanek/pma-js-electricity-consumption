@@ -3,12 +3,10 @@ import '../controller/home_controller.dart'; // Import controlleru
 
 class GraphAnalysisScreen extends StatelessWidget {
   final HomeController _controller =
-      HomeController(); // Vytvoření instance controlleru
+      HomeController(null!); // Vytvoření instance controlleru
 
   @override
   Widget build(BuildContext context) {
-    final stats =
-        _controller.getStatistics(); // Získání statistik z controlleru
 
     return Scaffold(
       appBar: AppBar(title: Text('Spotřeba elektřiny')),
@@ -19,7 +17,7 @@ class GraphAnalysisScreen extends StatelessWidget {
           children: [
             // Spotřeba za aktuální rok
             Text(
-              'Spotřeba za aktuální rok: ${_controller.getCurrentYearConsumption()} kWh',
+              'Spotřeba za aktuální rok: ${_controller.getCurrentYearTotalConsumption()} kWh',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 16),
@@ -53,11 +51,6 @@ class GraphAnalysisScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                          'Průměrná měsíční spotřeba: ${stats['averageMonthly']} kWh',
-                          style: TextStyle(fontSize: 16)),
-                      Text('Nejvyšší spotřeba: ${stats['highest']} kWh',
-                          style: TextStyle(fontSize: 16)),
                     ],
                   ),
                 ),
@@ -66,10 +59,6 @@ class GraphAnalysisScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Nejnižší spotřeba: ${stats['lowest']} kWh',
-                          style: TextStyle(fontSize: 16)),
-                      Text('Počet dnů měření: ${stats['daysCount']}',
-                          style: TextStyle(fontSize: 16)),
                     ],
                   ),
                 ),
