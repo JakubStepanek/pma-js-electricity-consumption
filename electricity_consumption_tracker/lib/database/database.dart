@@ -120,4 +120,33 @@ class AppDatabase extends _$AppDatabase {
         .watchSingleOrNull()
         .map((row) => row?.read(column.sum()));
   }
+
+  Stream<List<double>> getMonthlySumOfColumnForYear(
+      String columnName, int year) {
+    final Map<String, GeneratedColumn<double>> columnMap = {
+      'consumptionTarifHigh': consumptions.consumptionTarifHigh,
+      'consumptionTarifLow': consumptions.consumptionTarifLow,
+      'consumptionTarifOut': consumptions.consumptionTarifOut,
+    };
+
+    final column = columnMap[columnName];
+    if (column == null) {
+      throw ArgumentError('Sloupec "$columnName" nebyl nalezen.');
+    }
+
+    // Tato funkce bude vracet seznam s 12 hodnotami (pro každý měsíc)
+    return Stream.fromFuture(Future.wait(List.generate(12, (monthIndex) async {
+      final month =
+          monthIndex + 1; // Měsíce jsou 1-based (1 = leden, 2 = únor, ...)
+
+      final result = await (selectOnly(consumptions)
+            ..addColumns([column.sum()])
+            ..where(consumptions.date.month.equals(month))
+            ..where(consumptions.date.year.equals(year)))
+          .getSingleOrNull();
+
+      // Pokud není žádný záznam pro daný měsíc, vrátíme 0.0 jako výchozí hodnotu
+      return result?.read(column.sum()) ?? 0.0;
+    })));
+  }
 }

@@ -20,48 +20,53 @@ class YearlyConsumptionChart extends StatefulWidget {
 }
 
 class _YearlyConsumptionChartState extends State<YearlyConsumptionChart> {
-  late List<double?> _values = [];
+  late Stream<List<double?>> _valuesStream;
 
   @override
   void initState() {
-    // To se volá jenom jednou při vytvoření
     super.initState();
-    _loadData();
-  }
-
-  Future<void> _loadData() async {
-    //Stream dat na základě zvoleného roku
-    widget.controller.getHighTarifSumOfYear(widget.year).listen((data) {
-      setState(() {
-        _values = List.generate(12, (index) => data ?? 0.0);
-      });
-    });
+    // Inicializace streamu pro měsíční součty spotřeby
+    _valuesStream = widget.controller.getMonthlySumOfColumnForYear("consumptionTarifHigh", widget.year);
   }
 
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: 1.6,
-      child: BarChart(
-        BarChartData(
-          titlesData: titlesData,
-          borderData: borderData,
-          barGroups: _generateBarGroups(),
-          gridData: const FlGridData(show: false),
-          alignment: BarChartAlignment.spaceAround,
-          maxY: _getMaxY(),
-        ),
+      aspectRatio: 1.2,
+      child: StreamBuilder<List<double?>>(
+        stream: _valuesStream,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Chyba: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('Žádná data k zobrazení'));
+          } else {
+            final values = snapshot.data!;
+            return BarChart(
+              BarChartData(
+                titlesData: titlesData,
+                borderData: borderData,
+                barGroups: _generateBarGroups(values),
+                gridData: const FlGridData(show: false),
+                alignment: BarChartAlignment.spaceAround,
+                maxY: _getMaxY(values),
+              ),
+            );
+          }
+        },
       ),
     );
   }
 
-  List<BarChartGroupData> _generateBarGroups() {
+  List<BarChartGroupData> _generateBarGroups(List<double?> values) {
     return List.generate(12, (i) {
       return BarChartGroupData(
         x: i,
         barRods: [
           BarChartRodData(
-            toY: _values.isNotEmpty ? _values[i] ?? 0 : 0,
+            toY: values[i] ?? 0,
             gradient: _barsGradient,
           )
         ],
@@ -69,11 +74,9 @@ class _YearlyConsumptionChartState extends State<YearlyConsumptionChart> {
     });
   }
 
-  double _getMaxY() {
-    return (_values.isNotEmpty
-            ? _values.whereType<double>().reduce((a, b) => a > b ? a : b)
-            : 100) *
-        1.1; //o 10 % vyšší než max
+  double _getMaxY(List<double?> values) {
+    final maxValue = values.whereType<double>().reduce((a, b) => a > b ? a : b);
+    return maxValue * 1.1; // o 10 % vyšší než max
   }
 
   LinearGradient get _barsGradient => LinearGradient(
@@ -84,6 +87,7 @@ class _YearlyConsumptionChartState extends State<YearlyConsumptionChart> {
         begin: Alignment.bottomCenter,
         end: Alignment.topCenter,
       );
+
   FlTitlesData get titlesData => FlTitlesData(
       show: true,
       bottomTitles: AxisTitles(
@@ -94,11 +98,11 @@ class _YearlyConsumptionChartState extends State<YearlyConsumptionChart> {
             final style = TextStyle(
               color: AppColors.contentColorBlue.darken(20),
               fontWeight: FontWeight.bold,
-              fontSize: 12,
+              fontSize: 8,
             );
             final months = [
               'Leden',
-              'Ůnor',
+              'Únor',
               'Březen',
               'Duben',
               'Květen',
@@ -119,143 +123,6 @@ class _YearlyConsumptionChartState extends State<YearlyConsumptionChart> {
         ),
       ),
       leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)));
+
   FlBorderData get borderData => FlBorderData(show: false);
-
-  // BarTouchData get barTouchData => BarTouchData(
-  //       enabled: false,
-  //       touchTooltipData: BarTouchTooltipData(
-  //         getTooltipColor: (group) => Colors.transparent,
-  //         tooltipPadding: EdgeInsets.zero,
-  //         tooltipMargin: 8,
-  //         getTooltipItem: (
-  //           BarChartGroupData group,
-  //           int groupIndex,
-  //           BarChartRodData rod,
-  //           int rodIndex,
-  //         ) {
-  //           return BarTooltipItem(
-  //             rod.toY.round().toString(),
-  //             const TextStyle(
-  //               color: AppColors.contentColorCyan,
-  //               fontWeight: FontWeight.bold,
-  //             ),
-  //           );
-  //         },
-  //       ),
-  //     );
-
-  // Widget getTitles(double value, TitleMeta meta) {
-  //   final style = TextStyle(
-  //     color: AppColors.contentColorBlue.darken(20),
-  //     fontWeight: FontWeight.bold,
-  //     fontSize: 12,
-  //   );
-  //   String text;
-  //   switch (value.toInt()) {
-  //     case 0:
-  //       text = 'Leden';
-  //       break;
-  //     case 1:
-  //       text = 'Únor';
-  //       break;
-  //     case 2:
-  //       text = 'Březen';
-  //       break;
-  //     case 3:
-  //       text = 'Duben';
-  //       break;
-  //     case 4:
-  //       text = 'Květen';
-  //       break;
-  //     case 5:
-  //       text = 'Červen';
-  //       break;
-  //     case 6:
-  //       text = 'Červenec';
-  //       break;
-  //     case 7:
-  //       text = 'Srpen';
-  //       break;
-  //     case 8:
-  //       text = 'Září';
-  //       break;
-  //     case 9:
-  //       text = 'Říjen';
-  //       break;
-  //     case 10:
-  //       text = 'Listopad';
-  //       break;
-  //     case 11:
-  //       text = 'Prosinec';
-  //       break;
-  //     default:
-  //       text = '';
-  //       break;
-  //   }
-  //   return SideTitleWidget(
-  //     axisSide: meta.axisSide,
-  //     space: 4,
-  //     child: Text(text, style: style),
-  //   );
-  // }
-
-  // FlTitlesData get titlesData => FlTitlesData(
-  //       show: true,
-  //       bottomTitles: AxisTitles(
-  //         sideTitles: SideTitles(
-  //           showTitles: true,
-  //           reservedSize: 40,
-  //           getTitlesWidget: getTitles,
-  //         ),
-  //       ),
-  //       leftTitles: const AxisTitles(
-  //         sideTitles: SideTitles(showTitles: false),
-  //       ),
-  //       topTitles: const AxisTitles(
-  //         sideTitles: SideTitles(showTitles: false),
-  //       ),
-  //       rightTitles: const AxisTitles(
-  //         sideTitles: SideTitles(showTitles: false),
-  //       ),
-  //     );
-
-  // FlBorderData get borderData => FlBorderData(
-  //       show: false,
-  //     );
-
-  // LinearGradient get _barsGradient => LinearGradient(
-  //       colors: [
-  //         AppColors.contentColorBlue.darken(20),
-  //         AppColors.contentColorCyan,
-  //       ],
-  //       begin: Alignment.bottomCenter,
-  //       end: Alignment.topCenter,
-  //     );
-
-  // List<BarChartGroupData> get barGroups => List.generate(12, (i) {
-  //       if (_values[i] == null) {
-  //         return BarChartGroupData(
-  //           x: i,
-  //           barRods: [],
-  //           showingTooltipIndicators: [],
-  //         );
-  //       }
-  //       return BarChartGroupData(
-  //         x: i,
-  //         barRods: [
-  //           BarChartRodData(
-  //             toY: _values[i]!,
-  //             gradient: _barsGradient,
-  //           )
-  //         ],
-  //         showingTooltipIndicators: [0],
-  //       );
-  //     });
-
-  // double _getMaxY() {
-  //   final maxValue = _values
-  //       .where((value) => value != null)
-  //       .reduce((a, b) => a! > b! ? a : b);
-  //   return maxValue! * 1.1;
-  // }
 }
