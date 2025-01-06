@@ -39,7 +39,8 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             // Graph
             YearlyConsumptionChart(
-              controller: _controller,
+              dataStream: _controller.getMonthlySumOfColumnForYear(
+                  "consumptionTarifHigh", DateTime.now().year),
               year: DateTime.now().year,
             ),
             SizedBox(height: 16),

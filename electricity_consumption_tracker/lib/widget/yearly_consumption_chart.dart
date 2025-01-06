@@ -1,85 +1,71 @@
-import 'package:electricity_consumption_tracker/controller/home_controller.dart';
 import 'package:electricity_consumption_tracker/utils/extensions/color_extensions.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-
 import '../resources/app_colors.dart';
 
-class YearlyConsumptionChart extends StatefulWidget {
-  final HomeController controller;
+class YearlyConsumptionChart extends StatelessWidget {
+  final Stream<List<double?>> dataStream; // Stream dat
   final int year;
 
   const YearlyConsumptionChart({
-    required this.controller,
+    required this.dataStream,
     required this.year,
     super.key,
   });
 
   @override
-  State<StatefulWidget> createState() => _YearlyConsumptionChartState();
-}
-
-class _YearlyConsumptionChartState extends State<YearlyConsumptionChart> {
-  late Stream<List<double?>> _valuesStream;
-
-  @override
-  void initState() {
-    super.initState();
-    // Inicializace streamu pro měsíční součty spotřeby
-    _valuesStream = widget.controller.getMonthlySumOfColumnForYear("consumptionTarifHigh", widget.year);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1.2,
-      child: StreamBuilder<List<double?>>(
-        stream: _valuesStream,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Chyba: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('Žádná data k zobrazení'));
-          } else {
-            final values = snapshot.data!;
-            return BarChart(
-              BarChartData(
-                titlesData: titlesData,
-                borderData: borderData,
-                barGroups: _generateBarGroups(values),
-                gridData: const FlGridData(show: false),
-                alignment: BarChartAlignment.spaceAround,
-                maxY: _getMaxY(values),
-              ),
-            );
-          }
-        },
-      ),
+    return StreamBuilder<List<double?>>(
+      stream: dataStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const Text("Chyba při načítání dat");
+        }
+
+        if (!snapshot.hasData) {
+          return const CircularProgressIndicator(); // Načítání dat
+        }
+
+        final data = snapshot.data!; // Data z streamu
+        return AspectRatio(
+          aspectRatio: 1.2,
+          child: BarChart(
+            BarChartData(
+              titlesData: _buildTitlesData(),
+              borderData: _buildBorderData(),
+              barGroups: _generateBarGroups(data),
+              gridData: const FlGridData(show: false),
+              alignment: BarChartAlignment.spaceAround,
+              maxY: _calculateMaxY(data),
+            ),
+          ),
+        );
+      },
     );
   }
 
-  List<BarChartGroupData> _generateBarGroups(List<double?> values) {
+  List<BarChartGroupData> _generateBarGroups(List<double?> data) {
     return List.generate(12, (i) {
       return BarChartGroupData(
         x: i,
         barRods: [
           BarChartRodData(
-            toY: values[i] ?? 0,
-            gradient: _barsGradient,
+            toY: data.isNotEmpty ? data[i] ?? 0 : 0,
+            gradient: _buildBarsGradient(),
           )
         ],
       );
     });
   }
 
-  double _getMaxY(List<double?> values) {
-    final maxValue = values.whereType<double>().reduce((a, b) => a > b ? a : b);
-    return maxValue * 1.1; // o 10 % vyšší než max
+  double _calculateMaxY(List<double?> data) {
+    return (data.isNotEmpty
+            ? data.whereType<double>().reduce((a, b) => a > b ? a : b)
+            : 100) *
+        1.1; // o 10 % vyšší než max
   }
 
-  LinearGradient get _barsGradient => LinearGradient(
+  LinearGradient _buildBarsGradient() => LinearGradient(
         colors: [
           AppColors.contentColorBlue.darken(20),
           AppColors.contentColorCyan,
@@ -88,7 +74,7 @@ class _YearlyConsumptionChartState extends State<YearlyConsumptionChart> {
         end: Alignment.topCenter,
       );
 
-  FlTitlesData get titlesData => FlTitlesData(
+  FlTitlesData _buildTitlesData() => FlTitlesData(
       show: true,
       bottomTitles: AxisTitles(
         sideTitles: SideTitles(
@@ -124,5 +110,5 @@ class _YearlyConsumptionChartState extends State<YearlyConsumptionChart> {
       ),
       leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)));
 
-  FlBorderData get borderData => FlBorderData(show: false);
+  FlBorderData _buildBorderData() => FlBorderData(show: false);
 }
