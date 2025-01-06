@@ -35,7 +35,7 @@ class _AddConsumptionScreenState extends State<AddConsumptionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Přidat odečet')),
+      appBar: AppBar(title: const Text('Přidat odečet')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -43,23 +43,25 @@ class _AddConsumptionScreenState extends State<AddConsumptionScreen> {
           child: Column(
             children: [
               CustomTextFormFieldNotNull(
-                  controller: _lowTariffController,
-                  txtLabel: "Nízků tarif (kWh)"),
+                controller: _lowTariffController,
+                txtLabel: "Nízký tarif (kWh)",
+              ),
               const SizedBox(height: 16.0),
               CustomTextFormFieldNotNull(
-                  controller: _highTariffController,
-                  txtLabel: "Vysoký tarif (kWh)"),
+                controller: _highTariffController,
+                txtLabel: "Vysoký tarif (kWh)",
+              ),
               const SizedBox(height: 16.0),
               CustomTextFormFieldOptional(
-                  controller: _outTariffController,
-                  txtLabelOptional: "Prodejní tarif (kWh)"),
-              SizedBox(height: 16),
+                controller: _outTariffController,
+                txtLabelOptional: "Prodejní tarif (kWh)",
+              ),
+              const SizedBox(height: 16.0),
               ElevatedButton(
-                //onPressed: _saveConsumption,
                 onPressed: () {
                   addConsumption();
                 },
-                child: Text('Uložit odečet'),
+                child: const Text('Uložit odečet'),
               ),
             ],
           ),
@@ -83,27 +85,33 @@ class _AddConsumptionScreenState extends State<AddConsumptionScreen> {
 
       Provider.of<AppDatabase>(context, listen: false)
           .insertConsumption(entity)
-          .then(
-            (value) => ScaffoldMessenger.of(context).showMaterialBanner(
-              MaterialBanner(
-                backgroundColor: const Color.fromARGB(255, 5, 134, 72),
-                content: Text(
-                  'Odečet uložen: $value',
-                  style: const TextStyle(color: Colors.white),
+          .then((value) {
+        if (!mounted) return;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.check_circle, color: Colors.white),
+                const SizedBox(width: 8),
+                const Expanded(
+                  child: Text(
+                    'Odečet byl úspěšně uložen!',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
                 ),
-                actions: [
-                  TextButton(
-                    onPressed: () => ScaffoldMessenger.of(context)
-                        .hideCurrentMaterialBanner(),
-                    child: const Text(
-                      'Zavřít',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  )
-                ],
-              ),
+              ],
             ),
-          );
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.all(16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      });
     }
   }
 }

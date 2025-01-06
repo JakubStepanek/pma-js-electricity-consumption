@@ -123,30 +123,39 @@ class AppDatabase extends _$AppDatabase {
 
   Stream<List<double>> getMonthlySumOfColumnForYear(
       String columnName, int year) {
-    final Map<String, GeneratedColumn<double>> columnMap = {
-      'consumptionTarifHigh': consumptions.consumptionTarifHigh,
-      'consumptionTarifLow': consumptions.consumptionTarifLow,
-      'consumptionTarifOut': consumptions.consumptionTarifOut,
-    };
+    return (select(consumptions)
+          ..where((tbl) =>
+              tbl.date.year.equals(year))) // Filtrujeme na konkrétní rok
+        .watch()
+        .map((rows) {
+      // Vytvoříme seznam 12 hodnot (pro každý měsíc)
+      final monthlySums = List<double>.filled(12, 0.0);
 
-    final column = columnMap[columnName];
-    if (column == null) {
-      throw ArgumentError('Sloupec "$columnName" nebyl nalezen.');
-    }
+      for (final row in rows) {
+        final month = row.date.month; // Získáme měsíc z řádku
+        double? value;
 
-    // Tato funkce bude vracet seznam s 12 hodnotami (pro každý měsíc)
-    return Stream.fromFuture(Future.wait(List.generate(12, (monthIndex) async {
-      final month =
-          monthIndex + 1; // Měsíce jsou 1-based (1 = leden, 2 = únor, ...)
+        // Dynamicky načítáme hodnoty podle názvu sloupce
+        switch (columnName) {
+          case 'consumptionTarifHigh':
+            value = row.consumptionTarifHigh;
+            break;
+          case 'consumptionTarifLow':
+            value = row.consumptionTarifLow;
+            break;
+          case 'consumptionTarifOut':
+            value = row.consumptionTarifOut;
+            break;
+          default:
+            throw ArgumentError('Sloupec "$columnName" nebyl nalezen.');
+        }
 
-      final result = await (selectOnly(consumptions)
-            ..addColumns([column.sum()])
-            ..where(consumptions.date.month.equals(month))
-            ..where(consumptions.date.year.equals(year)))
-          .getSingleOrNull();
+        if (month != null && value != null) {
+          monthlySums[month - 1] += value; // Přidáme hodnotu pro daný měsíc
+        }
+      }
 
-      // Pokud není žádný záznam pro daný měsíc, vrátíme 0.0 jako výchozí hodnotu
-      return result?.read(column.sum()) ?? 0.0;
-    })));
+      return monthlySums;
+    });
   }
 }
