@@ -44,7 +44,31 @@ class YearlyConsumptionChart extends StatelessWidget {
                   barGroups: _generateBarGroups(data, barWidth),
                   titlesData: _buildTitlesData(),
                   borderData: _buildBorderData(),
-                  gridData: FlGridData(show: false), // Hide grid lines
+                  gridData: FlGridData(show: false),
+                  barTouchData: BarTouchData(
+                    touchTooltipData: BarTouchTooltipData(
+                      getTooltipColor: (group) => Colors.black87,
+                      tooltipPadding: const EdgeInsets.all(8),
+                      tooltipMargin: 8,
+                      tooltipRoundedRadius: 8,
+                      getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                        return BarTooltipItem(
+                          '${rod.toY.toStringAsFixed(2)} kWh',
+                          TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        );
+                      },
+                    ),
+                    touchCallback: (FlTouchEvent event, barTouchResponse) {
+                      if (!event.isInterestedForInteractions || barTouchResponse == null || barTouchResponse.spot == null) {
+                        return;
+                      }
+                      // Additional touch handling if needed
+                    },
+                  ),
                   maxY: _calculateMaxY(data),
                 ),
               ),
@@ -113,14 +137,15 @@ class YearlyConsumptionChart extends StatelessWidget {
                 'Lis',
                 'Pro',
               ];
-              return SideTitleWidget(
-                axisSide: meta.axisSide,
-                space: 4,
-                child: Transform.rotate(
-                  angle: -30 * 3.1415927 / 180,
+              if (value.toInt() >= 0 && value.toInt() < months.length) {
+                return SideTitleWidget(
+                  axisSide: meta.axisSide,
+                  space: 4,
                   child: Text(months[value.toInt()], style: style),
-                ),
-              );
+                );
+              } else {
+                return const SizedBox.shrink(); // Return an empty widget for numeric labels
+              }
             },
             interval: 1,
           ),
@@ -143,6 +168,12 @@ class YearlyConsumptionChart extends StatelessWidget {
             },
           ),
         ),
+        rightTitles: AxisTitles(
+          sideTitles: SideTitles(showTitles: false), // Hide right axis titles
+        ),
+        topTitles: AxisTitles(
+          sideTitles: SideTitles(showTitles: false), // Hide top axis titles
+        ),
       );
 
   FlBorderData _buildBorderData() => FlBorderData(
@@ -156,6 +187,8 @@ class YearlyConsumptionChart extends StatelessWidget {
             color: AppColors.contentColorBlue,
             width: 1,
           ),
+          right: BorderSide.none, // Remove right border
+          top: BorderSide.none,   // Remove top border if present
         ),
       );
 }

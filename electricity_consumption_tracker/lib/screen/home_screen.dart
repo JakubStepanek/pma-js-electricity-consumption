@@ -76,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(height: 16),
 
             // Statistiky
-            Text(
+            const Text(
               'Součet za poslední měsíc:',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
