@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../resources/app_colors.dart';
 
 class YearlyConsumptionChart extends StatelessWidget {
-  final Stream<List<double?>> dataStream; // Stream dat
+  final Stream<List<double?>> dataStream;
   final int year;
 
   const YearlyConsumptionChart({
@@ -23,20 +23,31 @@ class YearlyConsumptionChart extends StatelessWidget {
         }
 
         if (!snapshot.hasData) {
-          return const CircularProgressIndicator(); // Načítání dat
+          return const CircularProgressIndicator();
         }
 
-        final data = snapshot.data!; // Data z streamu
-        return AspectRatio(
-          aspectRatio: 1.2,
-          child: BarChart(
-            BarChartData(
-              titlesData: _buildTitlesData(),
-              borderData: _buildBorderData(),
-              barGroups: _generateBarGroups(data),
-              gridData: const FlGridData(show: false),
-              alignment: BarChartAlignment.spaceAround,
-              maxY: _calculateMaxY(data),
+        final data = snapshot.data!;
+        final screenWidth = MediaQuery.of(context).size.width;
+        final barWidth = screenWidth / (data.length * 2.5);
+        final groupsSpace = (screenWidth - (barWidth * data.length)) / (data.length + 1);
+
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SizedBox(
+            width: screenWidth,
+            child: AspectRatio(
+              aspectRatio: 1.2,
+              child: BarChart(
+                BarChartData(
+                  alignment: BarChartAlignment.spaceAround,
+                  groupsSpace: groupsSpace,
+                  barGroups: _generateBarGroups(data, barWidth),
+                  titlesData: _buildTitlesData(),
+                  borderData: _buildBorderData(),
+                  gridData: FlGridData(show: false), // Hide grid lines
+                  maxY: _calculateMaxY(data),
+                ),
+              ),
             ),
           ),
         );
@@ -44,15 +55,17 @@ class YearlyConsumptionChart extends StatelessWidget {
     );
   }
 
-  List<BarChartGroupData> _generateBarGroups(List<double?> data) {
-    return List.generate(12, (i) {
+  List<BarChartGroupData> _generateBarGroups(List<double?> data, double barWidth) {
+    return List.generate(data.length, (i) {
       return BarChartGroupData(
         x: i,
         barRods: [
           BarChartRodData(
-            toY: data.isNotEmpty ? data[i] ?? 0 : 0,
+            toY: data[i] ?? 0,
             gradient: _buildBarsGradient(),
-          )
+            width: barWidth,
+            borderRadius: BorderRadius.circular(4),
+          ),
         ],
       );
     });
@@ -62,7 +75,7 @@ class YearlyConsumptionChart extends StatelessWidget {
     return (data.isNotEmpty
             ? data.whereType<double>().reduce((a, b) => a > b ? a : b)
             : 100) *
-        1.1; // o 10 % vyšší než max
+        1.1;
   }
 
   LinearGradient _buildBarsGradient() => LinearGradient(
@@ -75,40 +88,74 @@ class YearlyConsumptionChart extends StatelessWidget {
       );
 
   FlTitlesData _buildTitlesData() => FlTitlesData(
-      show: true,
-      bottomTitles: AxisTitles(
-        sideTitles: SideTitles(
-          showTitles: true,
-          reservedSize: 40,
-          getTitlesWidget: (value, meta) {
-            final style = TextStyle(
-              color: AppColors.contentColorBlue.darken(20),
-              fontWeight: FontWeight.bold,
-              fontSize: 8,
-            );
-            final months = [
-              'Leden',
-              'Únor',
-              'Březen',
-              'Duben',
-              'Květen',
-              'Červen',
-              'Červenec',
-              'Srpen',
-              'Září',
-              'Říjen',
-              'Listopad',
-              'Prosinec',
-            ];
-            return SideTitleWidget(
-              axisSide: meta.axisSide,
-              space: 4,
-              child: Text(months[value.toInt()], style: style),
-            );
-          },
+        show: true,
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 30,
+            getTitlesWidget: (value, meta) {
+              final style = TextStyle(
+                color: AppColors.contentColorBlue.darken(20),
+                fontWeight: FontWeight.bold,
+                fontSize: 10,
+              );
+              final months = [
+                'Led',
+                'Úno',
+                'Bře',
+                'Dub',
+                'Kvě',
+                'Čvn',
+                'Čvc',
+                'Srp',
+                'Zář',
+                'Říj',
+                'Lis',
+                'Pro',
+              ];
+              return SideTitleWidget(
+                axisSide: meta.axisSide,
+                space: 4,
+                child: Transform.rotate(
+                  angle: -30 * 3.1415927 / 180,
+                  child: Text(months[value.toInt()], style: style),
+                ),
+              );
+            },
+            interval: 1,
+          ),
         ),
-      ),
-      leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)));
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 40,
+            getTitlesWidget: (value, meta) {
+              final style = TextStyle(
+                color: AppColors.contentColorBlue.darken(20),
+                fontWeight: FontWeight.bold,
+                fontSize: 10,
+              );
+              return SideTitleWidget(
+                axisSide: meta.axisSide,
+                space: 4,
+                child: Text(value.toInt().toString(), style: style),
+              );
+            },
+          ),
+        ),
+      );
 
-  FlBorderData _buildBorderData() => FlBorderData(show: false);
+  FlBorderData _buildBorderData() => FlBorderData(
+        show: true,
+        border: Border(
+          bottom: BorderSide(
+            color: AppColors.contentColorBlue,
+            width: 1,
+          ),
+          left: BorderSide(
+            color: AppColors.contentColorBlue,
+            width: 1,
+          ),
+        ),
+      );
 }
