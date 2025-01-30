@@ -158,6 +158,7 @@ class _EditConsumptionScreenState extends State<EditConsumptionScreen> {
             ),
           );
     }
+          Navigator.pushNamed(context, '/consumption_list');
   }
 
   Future<void> getConsumption() async {
