@@ -19,6 +19,7 @@ dependencies:
   intl: ^0.20.1
   provider: ^6.1.2
   fl_chart: ^0.70.0
+  quiver: ^3.2.2
   
 
 dev_dependencies:

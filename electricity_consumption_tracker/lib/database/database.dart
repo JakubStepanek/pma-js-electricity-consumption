@@ -26,7 +26,6 @@ class AppDatabase extends _$AppDatabase {
   @override
   int get schemaVersion => 1;
 
-  ///CRUD
   Future<List<Consumption>> getConsumptions() async {
     return await select(consumptions).get();
   }

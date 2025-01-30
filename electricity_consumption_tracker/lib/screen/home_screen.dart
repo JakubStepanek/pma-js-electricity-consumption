@@ -77,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             // Statistiky
             const Text(
-              'Součet za minulý měsíc:',
+              'Denní průměr tento měsíc:',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 4),
@@ -102,59 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           StreamBuilder<double?>(
-                              stream: _controller.getLastMonthTarif(
-                                  optionToColumnMap[_selectedOption]!),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasError) {
-                                  return const Text("Chyba");
-                                }
-
-                                if (!snapshot.hasData) {
-                                  return const CircularProgressIndicator();
-                                }
-
-                                return Text(
-                                  '${snapshot.data} kWh',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.normal),
-                                );
-                              }),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-
-            const Text(
-              'Denní průměr za minulý měsíc:',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 4),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('$_selectedOption [kW/h]: ',
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.normal))
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          StreamBuilder<double?>(
-                              stream: _controller.getLastMonthTarif(
+                              stream: _controller.getAverageLastMonthTarif(
                                   optionToColumnMap[_selectedOption]!),
                               builder: (context, snapshot) {
                                 if (snapshot.hasError) {

@@ -62,12 +62,18 @@ class _ConsumptionListScreenState extends State<ConsumptionListScreen> {
 
           List<Consumption>? consumptions = snapshot.data;
 
+          // Apply date range filter if selected
           if (_selectedDateRange != null && consumptions != null) {
             consumptions = consumptions.where((consumption) {
               return consumption.date.isAfter(_selectedDateRange!.start) &&
                   consumption.date.isBefore(
                       _selectedDateRange!.end.add(const Duration(days: 1)));
             }).toList();
+          }
+
+          // Sort consumptions by date in ascending order
+          if (consumptions != null && consumptions.isNotEmpty) {
+            consumptions.sort((a, b) => a.date.compareTo(b.date));
           }
 
           if (consumptions != null && consumptions.isNotEmpty) {
