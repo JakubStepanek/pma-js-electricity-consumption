@@ -18,20 +18,10 @@ class HomeController {
         columnName, currentMonth, currentYear);
   }
 
-  // Stream<double?> getLastMonthLowTarif() {
-  //   return _db.getSumOfColumnForMonthAndYear(
-  //       'consumptionTarifLow', currentMonth, currentYear);
-  // }
+  // Průměr za poslední měsíc
 
-  // Stream<double?> getLastMonthHighTarif() {
-  //   return _db.getSumOfColumnForMonthAndYear(
-  //       'consumptionTarifHigh', currentMonth, currentYear);
-  // }
+  
 
-  // Stream<double?> getLastMonthOutTarif() {
-  //   return _db.getSumOfColumnForMonthAndYear(
-  //       'consumptionTarifOut', currentMonth, currentYear);
-  // }
 
   void addConsumptionRecord() {
     AppNavigation();

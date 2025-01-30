@@ -111,6 +111,7 @@ class _AddConsumptionScreenState extends State<AddConsumptionScreen> {
             duration: const Duration(seconds: 3),
           ),
         );
+        Navigator.pushNamed(context, '/');
       });
     }
   }
