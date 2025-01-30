@@ -13,20 +13,15 @@ class HomeController {
     return _db.getHighTarifSumOfYear(currentYear);
   }
 
-  Stream<double?> getLastMonthLowTarif() {
+  Stream<double?> getLastMonthTarif(String columnName) {
     return _db.getSumOfColumnForMonthAndYear(
-        'consumptionTarifLow', currentMonth, currentYear);
+        columnName, currentMonth, currentYear);
   }
 
-  Stream<double?> getLastMonthHighTarif() {
-    return _db.getSumOfColumnForMonthAndYear(
-        'consumptionTarifHigh', currentMonth, currentYear);
-  }
+  // Průměr za poslední měsíc
 
-  Stream<double?> getLastMonthOutTarif() {
-    return _db.getSumOfColumnForMonthAndYear(
-        'consumptionTarifOut', currentMonth, currentYear);
-  }
+  
+
 
   void addConsumptionRecord() {
     AppNavigation();
