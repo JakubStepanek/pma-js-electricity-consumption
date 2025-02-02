@@ -1,9 +1,11 @@
 import 'package:electricity_consumption_tracker/database/database.dart';
 import 'package:electricity_consumption_tracker/navigation/app_navigation.dart';
+import 'package:quiver/time.dart';
 
 class HomeController {
   final int currentYear = DateTime.now().year;
   final int currentMonth = DateTime.now().month;
+
   final AppDatabase _db;
 
   HomeController(this._db);
@@ -15,13 +17,23 @@ class HomeController {
 
   Stream<double?> getLastMonthTarif(String columnName) {
     return _db.getSumOfColumnForMonthAndYear(
-        columnName, currentMonth, currentYear);
+        columnName, currentMonth - 1, currentYear);
   }
 
   // Průměr za poslední měsíc
-
-  
-
+  Stream<double?> getAverageLastMonthTarif(String columnName) {
+    int daysInMonthValue = daysInMonth(currentYear, currentMonth);
+    return _db
+        .getSumOfColumnForMonthAndYear(columnName, currentMonth, currentYear)
+        .map((value) {
+      if (value == null) {
+        return null;
+      } else {
+        double average = value / daysInMonthValue;
+        return double.parse(average.toStringAsFixed(2));
+      }
+    });
+  }
 
   void addConsumptionRecord() {
     AppNavigation();
