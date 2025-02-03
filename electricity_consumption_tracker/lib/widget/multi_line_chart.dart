@@ -130,7 +130,8 @@ class MultiLineChart extends StatelessWidget {
               ];
               if (value.toInt() >= 0 && value.toInt() < labels.length) {
                 return SideTitleWidget(
-                  axisSide: meta.axisSide,
+                  fitInside: SideTitleFitInsideData.fromTitleMeta(meta),
+                  meta: meta,
                   space: 4,
                   child: Text(labels[value.toInt()], style: style),
                 );
@@ -152,7 +153,8 @@ class MultiLineChart extends StatelessWidget {
                 fontSize: 10,
               );
               return SideTitleWidget(
-                axisSide: meta.axisSide,
+                fitInside: SideTitleFitInsideData.fromTitleMeta(meta),
+                meta: meta,
                 space: 4,
                 child: Text(value.toInt().toString(), style: style),
               );

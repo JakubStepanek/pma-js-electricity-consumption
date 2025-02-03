@@ -21,6 +21,8 @@ dependencies:
   fl_chart: ^0.70.0
   quiver: ^3.2.2
   rxdart: ^0.27.0
+  image_picker: ^0.8.7+3
+  flutter_tesseract_ocr: ^0.3.0
   
 
 dev_dependencies:
