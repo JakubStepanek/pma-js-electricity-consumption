@@ -23,8 +23,32 @@ class ElectricityConsumptionApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Electricity Consumption',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        brightness: Brightness.light,
+        primarySwatch: Colors.green,
+        scaffoldBackgroundColor: Colors.white,
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.green,
+          titleTextStyle: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
       ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        primarySwatch: Colors.green,
+        scaffoldBackgroundColor: Colors.black,
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.green[900],
+          titleTextStyle: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
+      themeMode: ThemeMode.system,
       initialRoute: '/',
       onGenerateRoute: RouteGenerator.generateRoute,
     );
