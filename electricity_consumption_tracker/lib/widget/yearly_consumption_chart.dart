@@ -29,7 +29,8 @@ class YearlyConsumptionChart extends StatelessWidget {
         final data = snapshot.data!;
         final screenWidth = MediaQuery.of(context).size.width;
         final barWidth = screenWidth / (data.length * 2.5);
-        final groupsSpace = (screenWidth - (barWidth * data.length)) / (data.length + 1);
+        final groupsSpace =
+            (screenWidth - (barWidth * data.length)) / (data.length + 1);
 
         return Padding(
           padding: const EdgeInsets.all(16.0),
@@ -63,7 +64,9 @@ class YearlyConsumptionChart extends StatelessWidget {
                       },
                     ),
                     touchCallback: (FlTouchEvent event, barTouchResponse) {
-                      if (!event.isInterestedForInteractions || barTouchResponse == null || barTouchResponse.spot == null) {
+                      if (!event.isInterestedForInteractions ||
+                          barTouchResponse == null ||
+                          barTouchResponse.spot == null) {
                         return;
                       }
                       // Additional touch handling if needed
@@ -79,7 +82,8 @@ class YearlyConsumptionChart extends StatelessWidget {
     );
   }
 
-  List<BarChartGroupData> _generateBarGroups(List<double?> data, double barWidth) {
+  List<BarChartGroupData> _generateBarGroups(
+      List<double?> data, double barWidth) {
     return List.generate(data.length, (i) {
       return BarChartGroupData(
         x: i,
@@ -139,12 +143,14 @@ class YearlyConsumptionChart extends StatelessWidget {
               ];
               if (value.toInt() >= 0 && value.toInt() < months.length) {
                 return SideTitleWidget(
-                  axisSide: meta.axisSide,
+                  fitInside: SideTitleFitInsideData.fromTitleMeta(meta),
+                  meta: meta,
                   space: 4,
                   child: Text(months[value.toInt()], style: style),
                 );
               } else {
-                return const SizedBox.shrink(); // Return an empty widget for numeric labels
+                return const SizedBox
+                    .shrink(); // Return an empty widget for numeric labels
               }
             },
             interval: 1,
@@ -161,7 +167,8 @@ class YearlyConsumptionChart extends StatelessWidget {
                 fontSize: 10,
               );
               return SideTitleWidget(
-                axisSide: meta.axisSide,
+                fitInside: SideTitleFitInsideData.fromTitleMeta(meta),
+                meta: meta,
                 space: 4,
                 child: Text(value.toInt().toString(), style: style),
               );
@@ -188,7 +195,7 @@ class YearlyConsumptionChart extends StatelessWidget {
             width: 1,
           ),
           right: BorderSide.none, // Remove right border
-          top: BorderSide.none,   // Remove top border if present
+          top: BorderSide.none, // Remove top border if present
         ),
       );
 }
