@@ -28,7 +28,7 @@ This repository contains the semester project for the Mobile Applications Develo
 1. **Clone the Repository**  
    Clone the project using Git:
    ```bash
-   git clone -b develop https://github.com/JakubStepanek/pma-js-electricity-consumption.git
+   git clone https://github.com/JakubStepanek/pma-js-electricity-consumption.git
    ```
 
 2. **Install Dependencies**  
