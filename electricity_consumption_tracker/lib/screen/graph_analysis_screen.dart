@@ -1,5 +1,6 @@
 import 'package:electricity_consumption_tracker/controller/graph_analysis_screen_controller.dart';
 import 'package:electricity_consumption_tracker/database/database.dart';
+import 'package:electricity_consumption_tracker/resources/app_colors.dart';
 import 'package:electricity_consumption_tracker/widget/multi_line_chart.dart';
 import 'package:electricity_consumption_tracker/widget/multi_year_graph_chart.dart';
 import 'package:flutter/material.dart';
@@ -16,13 +17,30 @@ class GraphAnalysisScreen extends StatelessWidget {
     'Vysoký tarif',
     'Prodejní tarif'
   ];
-  final List<Color> lineColors = const [Colors.blue, Colors.red, Colors.green];
+  final List<Color> lineColors = const [
+    AppColors.graphLineRed,
+    AppColors.graphLineGreen,
+    AppColors.graphLineBlue
+  ];
 
+  /// The build function returns a widget tree for a screen displaying electricity consumption data with
+  /// graphs and legends.
+  ///
+  /// Args:
+  ///   context (BuildContext): The `context` parameter in Flutter is an object that holds information
+  /// about the current build context of the widget. It provides access to various properties and
+  /// methods related to the widget tree, such as accessing inherited widgets, theme data, media
+  /// queries, and more.
+  ///
+  /// Returns:
+  ///   The `build` method is returning a `Provider` widget with a `GraphAnalysisScreenController`
+  /// created using the `AppDatabase` provided higher in the widget tree. Inside the `Provider`, there
+  /// is a `Builder` widget that builds the UI for the screen. The UI consists of a `GradientBackground`
+  /// widget wrapping a `Scaffold` with an `AppBar` and a `SingleChildScrollView
   @override
   Widget build(BuildContext context) {
     return Provider<GraphAnalysisScreenController>(
       create: (context) {
-        // Assumes AppDatabase is provided higher in the widget tree.
         final AppDatabase db = Provider.of<AppDatabase>(context, listen: false);
         return GraphAnalysisScreenController(db);
       },
@@ -43,9 +61,8 @@ class GraphAnalysisScreen extends StatelessWidget {
               controller.getGraphDataStream(currentYear, columns);
 
           return GradientBackground(
-            // Wrap the entire Scaffold in the gradient background.
             child: Scaffold(
-              backgroundColor: Colors.transparent, // Let the gradient show.
+              backgroundColor: Colors.transparent,
               appBar: AppBar(
                 title: const Text('Detaily'),
                 backgroundColor: Colors.transparent,
@@ -56,7 +73,6 @@ class GraphAnalysisScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Title and chart wrapped in RoundedBackground.
                     RoundedBackground(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,7 +83,6 @@ class GraphAnalysisScreen extends StatelessWidget {
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 8),
-                          // MultiLineChart takes a stream of data and displays the graph.
                           MultiLineChart(
                             dataStream: dataStream,
                             lineNames: lineNames,
@@ -77,9 +92,8 @@ class GraphAnalysisScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    // Legend wrapped in RoundedBackground (optional).
                     RoundedBackground(
-                      backgroundOpacity: 0.4, // Adjust opacity as desired.
+                      backgroundOpacity: 0.4,
                       padding: const EdgeInsets.all(8.0),
                       child: Wrap(
                         spacing: 16,
@@ -107,8 +121,9 @@ class GraphAnalysisScreen extends StatelessWidget {
                       ),
                     ),
                     const Divider(height: 32),
-                    // MultiYearGraphChart widget (you can also wrap it in RoundedBackground if desired)
-                    RoundedBackground(child: const MultiYearGraphChart(),),
+                    RoundedBackground(
+                      child: const MultiYearGraphChart(),
+                    ),
                   ],
                 ),
               ),

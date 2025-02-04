@@ -6,7 +6,7 @@ import 'package:electricity_consumption_tracker/database/database.dart';
 import 'package:electricity_consumption_tracker/widget/yearly_consumption_chart.dart';
 import 'package:electricity_consumption_tracker/navigation/app_navigation.dart';
 import '../controller/home_controller.dart';
-import '../widget/gradient_background.dart'; // Your gradient background widget
+import '../widget/gradient_background.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -35,46 +35,72 @@ class _HomeScreenState extends State<HomeScreen> {
     options = optionToColumnMap.keys.toList();
   }
 
+  /// The _showPicker function displays a modal bottom sheet with a CupertinoPicker widget in a dark
+  /// theme.
+  ///
+  /// Args:
+  ///   context (BuildContext): The `context` parameter in Flutter represents the build context of the
+  /// widget that is currently being built. It provides access to various properties and methods related
+  /// to the widget tree, such as theme, size, and localization.
+  ///
+  /// Returns:
+  ///   A `CupertinoTheme` widget is being returned, which contains a `Container` widget with a
+  /// `CupertinoPicker` widget inside. The `CupertinoPicker` widget displays a list of options for the
+  /// user to choose from.
   void _showPicker(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    builder: (BuildContext builder) {
-      return CupertinoTheme(
-        data: CupertinoThemeData(
-          brightness: Brightness.dark,
-          textTheme: CupertinoTextThemeData(
-            pickerTextStyle: const TextStyle(color: Colors.white),
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext builder) {
+        return CupertinoTheme(
+          data: CupertinoThemeData(
+            brightness: Brightness.dark,
+            textTheme: CupertinoTextThemeData(
+              pickerTextStyle: const TextStyle(color: Colors.white),
+            ),
           ),
-        ),
-        child: Container(
-          height: MediaQuery.of(context).size.height / 3,
-          color: Colors.black, // set a dark background color
-          child: CupertinoPicker(
-            backgroundColor: Colors.transparent, // let the theme show through
-            itemExtent: 30.0,
-            onSelectedItemChanged: (int index) {
-              setState(() {
-                _selectedOption = options[index];
-              });
-            },
-            children: options.map((String option) {
-              return Center(child: Text(option));
-            }).toList(),
+          child: Container(
+            height: MediaQuery.of(context).size.height / 3,
+            color: Colors.black,
+            child: CupertinoPicker(
+              backgroundColor: Colors.transparent,
+              itemExtent: 30.0,
+              onSelectedItemChanged: (int index) {
+                setState(() {
+                  _selectedOption = options[index];
+                });
+              },
+              children: options.map((String option) {
+                return Center(child: Text(option));
+              }).toList(),
+            ),
           ),
-        ),
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 
+  /// The build function returns a widget tree for a screen displaying electricity consumption data with
+  /// charts and buttons for user interaction.
+  ///
+  /// Args:
+  ///   context (BuildContext): The `context` parameter in Flutter represents the build context of the
+  /// widget. It is a reference to the location of a widget within the widget tree. The context provides
+  /// access to various properties and methods related to the widget, such as theme data, media queries,
+  /// and navigation.
+  ///
+  /// Returns:
+  ///   The build method is returning a Widget tree that consists of a GradientBackground widget as the
+  /// root, which contains a Scaffold widget. Inside the Scaffold, there is an AppBar with a title, a
+  /// body that includes a SingleChildScrollView with multiple child widgets such as RoundedBackground,
+  /// YearlyConsumptionChart, Text widgets, Row widget, ElevatedButton widgets, and more. The
+  /// bottomNavigationBar is set to an AppNavigation
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return GradientBackground(
-      // Wrap entire screen with your gradient background.
       child: Scaffold(
-        backgroundColor: Colors.transparent, // Let the gradient show.
+        backgroundColor: Colors.transparent,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: const Text('Spotřeba elektřiny'),
@@ -86,7 +112,6 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Wrap the chart widget in RoundedBackground.
               RoundedBackground(
                 child: YearlyConsumptionChart(
                   dataStream: _controller.getMonthlySumOfColumnForYear(
@@ -95,7 +120,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              // Wrap statistics text in RoundedBackground.
               RoundedBackground(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -152,7 +176,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   label: Text(_selectedOption),
                 ),
               ),
-
               const SizedBox(height: 16),
               SizedBox(
                 width: double.infinity,

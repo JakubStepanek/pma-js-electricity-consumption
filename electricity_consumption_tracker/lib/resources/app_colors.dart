@@ -22,4 +22,10 @@ class AppColors {
   static const Color contentColorPink = Color(0xFFFF3AF2);
   static const Color contentColorRed = Color(0xFFE80054);
   static const Color contentColorCyan = Color(0xFF50E4FF);
+  
+  static const Color bottomNavigationBarItemSelected = Color(0xFFBA5D06);
+  static const Color bottomNavigationBarItemUnselected = Color(0xB3FFFFFF);
+  static const Color graphLineGreen = Color.fromARGB(179, 8, 183, 43);
+  static const Color graphLineRed = Color.fromARGB(255, 109, 41, 41);
+  static const Color graphLineBlue = Color.fromARGB(255, 45, 37, 99);
 }

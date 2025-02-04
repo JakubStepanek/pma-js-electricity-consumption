@@ -1,5 +1,6 @@
+import 'package:electricity_consumption_tracker/widget/custom_app_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:electricity_consumption_tracker/database/database.dart';
 
@@ -13,30 +14,31 @@ class ConsumptionListScreen extends StatefulWidget {
 class _ConsumptionListScreenState extends State<ConsumptionListScreen> {
   DateTimeRange? _selectedDateRange;
 
+  /// This Dart function builds a screen displaying a list of consumptions with options to filter by
+  /// date range, edit, and delete each consumption entry.
+  ///
+  /// Args:
+  ///   context (BuildContext): The `context` parameter in Flutter represents the build context of the
+  /// widget. It is a reference to the location of a widget within the widget tree. The context provides
+  /// access to various properties and methods related to the widget, such as theme, localization, and
+  /// navigation.
+  ///
+  /// Returns:
+  ///   A Scaffold widget is being returned, which contains an AppBar with a title 'Seznam odečtů' and
+  /// various actions such as IconButton for filtering and clearing date range. The body of the Scaffold
+  /// is a StreamBuilder that listens to a stream of Consumption data and displays a list of
+  /// consumptions based on the selected date range. Each consumption item in the list is displayed
+  /// within a Card widget with
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // Use a custom back button that pops the route.
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back_ios),
         ),
         title: const Text('Seznam odečtů'),
-        // Use flexibleSpace to paint a gradient behind the AppBar content.
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: RadialGradient(
-              center: Alignment.topLeft, // Orange starts at top left.
-              radius: 1.1, // Adjust to control the spread of the gradient.
-              colors: [
-                Colors.orange, // Top left circle effect.
-                Color(0xFF191970), // Midnight blue for the rest of the background.
-              ],
-              stops: [0.2, 1.0], // Controls how much area is orange.
-            ),
-          ),
-        ),
+        flexibleSpace: GradientAppBar(),
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
@@ -71,17 +73,12 @@ class _ConsumptionListScreenState extends State<ConsumptionListScreen> {
         stream: Provider.of<AppDatabase>(context).getConsumptionsStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState != ConnectionState.active) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            return Center(
-              child: Text(snapshot.error.toString()),
-            );
+            return Center(child: Text(snapshot.error.toString()));
           }
           List<Consumption>? consumptions = snapshot.data;
-          // Apply date range filter if selected.
           if (_selectedDateRange != null && consumptions != null) {
             consumptions = consumptions.where((consumption) {
               return consumption.date.isAfter(_selectedDateRange!.start) &&
@@ -90,11 +87,8 @@ class _ConsumptionListScreenState extends State<ConsumptionListScreen> {
                   );
             }).toList();
           }
-          // Sort consumptions by date in ascending order.
           if (consumptions != null && consumptions.isNotEmpty) {
             consumptions.sort((a, b) => a.date.compareTo(b.date));
-          }
-          if (consumptions != null && consumptions.isNotEmpty) {
             return ListView.builder(
               itemCount: consumptions.length,
               itemBuilder: (context, index) {
@@ -108,8 +102,8 @@ class _ConsumptionListScreenState extends State<ConsumptionListScreen> {
                     );
                   },
                   child: Card(
-                    margin: const EdgeInsets.symmetric(
-                        vertical: 8, horizontal: 16),
+                    margin:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Row(
@@ -119,7 +113,8 @@ class _ConsumptionListScreenState extends State<ConsumptionListScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '${consumption.date.toLocal()}'.split(' ')[0],
+                                DateFormat('d. MMMM yyyy', 'cs')
+                                    .format(consumption.date.toLocal()),
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
@@ -149,7 +144,8 @@ class _ConsumptionListScreenState extends State<ConsumptionListScreen> {
                                 icon: const Icon(Icons.delete),
                                 color: Colors.red,
                                 onPressed: () async {
-                                  await _deleteConsumption(context, consumption.id);
+                                  await _deleteConsumption(
+                                      context, consumption.id);
                                 },
                               ),
                             ],
@@ -173,6 +169,18 @@ class _ConsumptionListScreenState extends State<ConsumptionListScreen> {
     );
   }
 
+  /// The function `_deleteConsumption` displays a confirmation dialog to delete a consumption entry and
+  /// deletes it if confirmed.
+  ///
+  /// Args:
+  ///   context (BuildContext): The `context` parameter in the `_deleteConsumption` method refers to the
+  /// `BuildContext` object. It represents the location of a widget in the widget tree. The `context`
+  /// parameter is used to access information about the widget's location in the widget tree, such as
+  /// theme data, media queries
+  ///   consumptionId (int): The `consumptionId` parameter in the `_deleteConsumption` method is an
+  /// integer value that represents the unique identifier of the consumption record that you want to
+  /// delete from the database. This parameter is used to identify the specific consumption entry that
+  /// the user wants to delete when the deletion action is confirmed in
   Future<void> _deleteConsumption(
       BuildContext context, int consumptionId) async {
     final shouldDelete = await showDialog<bool>(

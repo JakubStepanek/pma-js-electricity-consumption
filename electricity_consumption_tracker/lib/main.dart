@@ -1,10 +1,14 @@
 import 'package:electricity_consumption_tracker/route/route_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import './database/database.dart';
+import 'package:electricity_consumption_tracker/database/database.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Date format czech
+  await initializeDateFormatting('cs', '');
+  
   runApp(
     Provider<AppDatabase>(
       create: (context) => AppDatabase(),
@@ -24,10 +28,10 @@ class ElectricityConsumptionApp extends StatelessWidget {
       title: 'Electricity Consumption',
       theme: ThemeData(
         brightness: Brightness.light,
-        primarySwatch: Colors.green,
+        primarySwatch: Colors.blueGrey,
         scaffoldBackgroundColor: Colors.white,
         appBarTheme: AppBarTheme(
-          backgroundColor: Colors.green,
+          backgroundColor: Colors.black,
           titleTextStyle: TextStyle(
             color: Colors.white,
             fontSize: 20,
