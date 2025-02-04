@@ -149,7 +149,7 @@ class AppDatabase extends _$AppDatabase {
             throw ArgumentError('Sloupec "$columnName" nebyl nalezen.');
         }
 
-        if (month != null && value != null) {
+        if (value != null) {
           monthlySums[month - 1] += value; // Přidáme hodnotu pro daný měsíc
         }
       }

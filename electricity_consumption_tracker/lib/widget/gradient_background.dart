@@ -11,7 +11,7 @@ class GradientBackground extends StatelessWidget {
       decoration: const BoxDecoration(
         gradient: RadialGradient(
           center: Alignment.topLeft, // Orange starts at top left
-          radius: 1.5, // Adjust to control the spread of the gradient
+          radius: 1.1, // Adjust to control the spread of the gradient
           colors: [
             Colors.orange, // Orange for the top left circle effect
             Color(0xFF191970), // Midnight blue for the rest of the background
