@@ -48,7 +48,7 @@ class ElectricityConsumptionApp extends StatelessWidget {
           ),
         ),
       ),
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode.dark,
       initialRoute: '/',
       onGenerateRoute: RouteGenerator.generateRoute,
     );

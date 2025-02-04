@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:electricity_consumption_tracker/database/database.dart';
 
@@ -16,7 +17,28 @@ class _ConsumptionListScreenState extends State<ConsumptionListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // Use a custom back button that pops the route.
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back_ios),
+        ),
         title: const Text('Seznam odečtů'),
+        // Use flexibleSpace to paint a gradient behind the AppBar content.
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: RadialGradient(
+              center: Alignment.topLeft, // Orange starts at top left.
+              radius: 1.1, // Adjust to control the spread of the gradient.
+              colors: [
+                Colors.orange, // Top left circle effect.
+                Color(0xFF191970), // Midnight blue for the rest of the background.
+              ],
+              stops: [0.2, 1.0], // Controls how much area is orange.
+            ),
+          ),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_list),
@@ -53,29 +75,25 @@ class _ConsumptionListScreenState extends State<ConsumptionListScreen> {
               child: CircularProgressIndicator(),
             );
           }
-
           if (snapshot.hasError) {
             return Center(
               child: Text(snapshot.error.toString()),
             );
           }
-
           List<Consumption>? consumptions = snapshot.data;
-
-          // Apply date range filter if selected
+          // Apply date range filter if selected.
           if (_selectedDateRange != null && consumptions != null) {
             consumptions = consumptions.where((consumption) {
               return consumption.date.isAfter(_selectedDateRange!.start) &&
                   consumption.date.isBefore(
-                      _selectedDateRange!.end.add(const Duration(days: 1)));
+                    _selectedDateRange!.end.add(const Duration(days: 1)),
+                  );
             }).toList();
           }
-
-          // Sort consumptions by date in ascending order
+          // Sort consumptions by date in ascending order.
           if (consumptions != null && consumptions.isNotEmpty) {
             consumptions.sort((a, b) => a.date.compareTo(b.date));
           }
-
           if (consumptions != null && consumptions.isNotEmpty) {
             return ListView.builder(
               itemCount: consumptions.length,
@@ -83,12 +101,15 @@ class _ConsumptionListScreenState extends State<ConsumptionListScreen> {
                 final consumption = consumptions![index];
                 return GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/edit_consumption',
-                        arguments: consumption.id);
+                    Navigator.pushNamed(
+                      context,
+                      '/edit_consumption',
+                      arguments: consumption.id,
+                    );
                   },
                   child: Card(
-                    margin:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 8, horizontal: 16),
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Row(
@@ -118,15 +139,17 @@ class _ConsumptionListScreenState extends State<ConsumptionListScreen> {
                                 color: Colors.blue,
                                 onPressed: () {
                                   Navigator.pushNamed(
-                                      context, '/edit_consumption',
-                                      arguments: consumption.id);
+                                    context,
+                                    '/edit_consumption',
+                                    arguments: consumption.id,
+                                  );
                                 },
                               ),
                               IconButton(
                                 icon: const Icon(Icons.delete),
                                 color: Colors.red,
                                 onPressed: () async {
-                                  _deleteConsumption(context, consumption.id);
+                                  await _deleteConsumption(context, consumption.id);
                                 },
                               ),
                             ],
@@ -139,7 +162,6 @@ class _ConsumptionListScreenState extends State<ConsumptionListScreen> {
               },
             );
           }
-
           return const Center(
             child: Text(
               'Zatím nemáte žádné odečty!',
@@ -170,7 +192,6 @@ class _ConsumptionListScreenState extends State<ConsumptionListScreen> {
         ],
       ),
     );
-
     if (shouldDelete ?? false) {
       await Provider.of<AppDatabase>(context, listen: false)
           .deleteConsumption(consumptionId);

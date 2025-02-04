@@ -15,6 +15,9 @@ class YearlyConsumptionChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Using MediaQuery to obtain screen width for calculations.
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return StreamBuilder<List<double?>>(
       stream: dataStream,
       builder: (context, snapshot) {
@@ -23,57 +26,56 @@ class YearlyConsumptionChart extends StatelessWidget {
         }
 
         if (!snapshot.hasData) {
-          return const CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         }
 
         final data = snapshot.data!;
-        final screenWidth = MediaQuery.of(context).size.width;
+        // Calculate bar width and spacing based on the available screen width.
         final barWidth = screenWidth / (data.length * 2.5);
         final groupsSpace =
             (screenWidth - (barWidth * data.length)) / (data.length + 1);
 
+        // Replace AspectRatio with a fixed height SizedBox
         return Padding(
           padding: const EdgeInsets.all(16.0),
           child: SizedBox(
-            width: screenWidth,
-            child: AspectRatio(
-              aspectRatio: 1.2,
-              child: BarChart(
-                BarChartData(
-                  alignment: BarChartAlignment.spaceAround,
-                  groupsSpace: groupsSpace,
-                  barGroups: _generateBarGroups(data, barWidth),
-                  titlesData: _buildTitlesData(),
-                  borderData: _buildBorderData(),
-                  gridData: FlGridData(show: false),
-                  barTouchData: BarTouchData(
-                    touchTooltipData: BarTouchTooltipData(
-                      getTooltipColor: (group) => Colors.black87,
-                      tooltipPadding: const EdgeInsets.all(8),
-                      tooltipMargin: 8,
-                      tooltipRoundedRadius: 8,
-                      getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                        return BarTooltipItem(
-                          '${rod.toY.toStringAsFixed(2)} kWh',
-                          TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
-                        );
-                      },
-                    ),
-                    touchCallback: (FlTouchEvent event, barTouchResponse) {
-                      if (!event.isInterestedForInteractions ||
-                          barTouchResponse == null ||
-                          barTouchResponse.spot == null) {
-                        return;
-                      }
-                      // Additional touch handling if needed
+            width: double.infinity,
+            height: 300, // Adjust the height here as needed.
+            child: BarChart(
+              BarChartData(
+                alignment: BarChartAlignment.spaceAround,
+                groupsSpace: groupsSpace,
+                barGroups: _generateBarGroups(data, barWidth),
+                titlesData: _buildTitlesData(),
+                borderData: _buildBorderData(),
+                gridData: FlGridData(show: false),
+                barTouchData: BarTouchData(
+                  touchTooltipData: BarTouchTooltipData(
+                    getTooltipColor: (group) => Colors.black87,
+                    tooltipPadding: const EdgeInsets.all(8),
+                    tooltipMargin: 8,
+                    tooltipRoundedRadius: 8,
+                    getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                      return BarTooltipItem(
+                        '${rod.toY.toStringAsFixed(2)} kWh',
+                        const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      );
                     },
                   ),
-                  maxY: _calculateMaxY(data),
+                  touchCallback: (FlTouchEvent event, barTouchResponse) {
+                    if (!event.isInterestedForInteractions ||
+                        barTouchResponse == null ||
+                        barTouchResponse.spot == null) {
+                      return;
+                    }
+                    // Additional touch handling if needed
+                  },
                 ),
+                maxY: _calculateMaxY(data),
               ),
             ),
           ),
@@ -82,8 +84,7 @@ class YearlyConsumptionChart extends StatelessWidget {
     );
   }
 
-  List<BarChartGroupData> _generateBarGroups(
-      List<double?> data, double barWidth) {
+  List<BarChartGroupData> _generateBarGroups(List<double?> data, double barWidth) {
     return List.generate(data.length, (i) {
       return BarChartGroupData(
         x: i,
@@ -115,73 +116,73 @@ class YearlyConsumptionChart extends StatelessWidget {
         end: Alignment.topCenter,
       );
 
-  FlTitlesData _buildTitlesData() => FlTitlesData(
-        show: true,
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 30,
-            getTitlesWidget: (value, meta) {
-              final style = TextStyle(
-                color: AppColors.contentColorBlue.darken(20),
-                fontWeight: FontWeight.bold,
-                fontSize: 10,
-              );
-              final months = [
-                'Led',
-                'Úno',
-                'Bře',
-                'Dub',
-                'Kvě',
-                'Čvn',
-                'Čvc',
-                'Srp',
-                'Zář',
-                'Říj',
-                'Lis',
-                'Pro',
-              ];
-              if (value.toInt() >= 0 && value.toInt() < months.length) {
-                return SideTitleWidget(
-                  fitInside: SideTitleFitInsideData.fromTitleMeta(meta),
-                  meta: meta,
-                  space: 4,
-                  child: Text(months[value.toInt()], style: style),
-                );
-              } else {
-                return const SizedBox
-                    .shrink(); // Return an empty widget for numeric labels
-              }
-            },
-            interval: 1,
-          ),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 40,
-            getTitlesWidget: (value, meta) {
-              final style = TextStyle(
-                color: AppColors.contentColorBlue.darken(20),
-                fontWeight: FontWeight.bold,
-                fontSize: 10,
-              );
+FlTitlesData _buildTitlesData() => FlTitlesData(
+      show: true,
+      bottomTitles: AxisTitles(
+        sideTitles: SideTitles(
+          showTitles: true,
+          reservedSize: 20,
+          getTitlesWidget: (value, meta) {
+            final style = TextStyle(
+              color: AppColors.contentColorBlue.darken(20),
+              fontWeight: FontWeight.bold,
+              fontSize: 10,
+            );
+            final months = [
+              'Led',
+              'Úno',
+              'Bře',
+              'Dub',
+              'Kvě',
+              'Čvn',
+              'Čvc',
+              'Srp',
+              'Zář',
+              'Říj',
+              'Lis',
+              'Pro',
+            ];
+            if (value.toInt() >= 0 && value.toInt() < months.length) {
               return SideTitleWidget(
                 fitInside: SideTitleFitInsideData.fromTitleMeta(meta),
                 meta: meta,
-                space: 4,
-                child: Text(value.toInt().toString(), style: style),
+                space: 4, // Reduced space from 4 to 2
+                child: Text(months[value.toInt()], style: style),
               );
-            },
-          ),
+            } else {
+              return const SizedBox.shrink();
+            }
+          },
+          interval: 1,
         ),
-        rightTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false), // Hide right axis titles
+      ),
+      leftTitles: AxisTitles(
+        sideTitles: SideTitles(
+          showTitles: true,
+          reservedSize: 40,
+          getTitlesWidget: (value, meta) {
+            final style = TextStyle(
+              color: AppColors.contentColorBlue.darken(20),
+              fontWeight: FontWeight.bold,
+              fontSize: 10,
+            );
+            return SideTitleWidget(
+              fitInside: SideTitleFitInsideData.fromTitleMeta(meta),
+              meta: meta,
+              space: 4, // Reduced space from 4 to 2
+              child: Text(value.toInt().toString(), style: style),
+            );
+          },
         ),
-        topTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false), // Hide top axis titles
-        ),
-      );
+      ),
+      rightTitles: AxisTitles(
+        sideTitles: SideTitles(showTitles: false),
+      ),
+      topTitles: AxisTitles(
+        sideTitles: SideTitles(showTitles: false),
+      ),
+    );
+
 
   FlBorderData _buildBorderData() => FlBorderData(
         show: true,
@@ -194,8 +195,8 @@ class YearlyConsumptionChart extends StatelessWidget {
             color: AppColors.contentColorBlue,
             width: 1,
           ),
-          right: BorderSide.none, // Remove right border
-          top: BorderSide.none, // Remove top border if present
+          right: BorderSide.none,
+          top: BorderSide.none,
         ),
       );
 }
