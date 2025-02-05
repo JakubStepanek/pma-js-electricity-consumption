@@ -1,3 +1,5 @@
+import 'package:electricity_consumption_tracker/resources/app_colors.dart';
+import 'package:electricity_consumption_tracker/widget/custom_button.dart';
 import 'package:electricity_consumption_tracker/widget/rounded_background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,6 +10,10 @@ import 'package:electricity_consumption_tracker/navigation/app_navigation.dart';
 import '../controller/home_controller.dart';
 import '../widget/gradient_background.dart';
 
+/// A stateful widget representing the home screen for the electricity consumption tracker.
+///
+/// This screen displays charts for electricity consumption, allows the user to select different tariff options
+/// via a CupertinoPicker, and provides navigation to add new consumption entries.
 class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -16,7 +22,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late HomeController _controller;
 
-  // Mapping of user-friendly names to database column names.
+  /// Mapping of user-friendly names to database column names.
   final Map<String, String> optionToColumnMap = {
     'Nízký tarif': 'consumptionTarifLow',
     'Vysoký tarif': 'consumptionTarifHigh',
@@ -35,18 +41,9 @@ class _HomeScreenState extends State<HomeScreen> {
     options = optionToColumnMap.keys.toList();
   }
 
-  /// The _showPicker function displays a modal bottom sheet with a CupertinoPicker widget in a dark
-  /// theme.
+  /// Displays a modal bottom sheet with a CupertinoPicker for tariff selection.
   ///
-  /// Args:
-  ///   context (BuildContext): The `context` parameter in Flutter represents the build context of the
-  /// widget that is currently being built. It provides access to various properties and methods related
-  /// to the widget tree, such as theme, size, and localization.
-  ///
-  /// Returns:
-  ///   A `CupertinoTheme` widget is being returned, which contains a `Container` widget with a
-  /// `CupertinoPicker` widget inside. The `CupertinoPicker` widget displays a list of options for the
-  /// user to choose from.
+  /// The picker is styled with a dark CupertinoTheme.
   void _showPicker(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -79,21 +76,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// The build function returns a widget tree for a screen displaying electricity consumption data with
-  /// charts and buttons for user interaction.
+  /// Builds the widget tree for the HomeScreen.
   ///
-  /// Args:
-  ///   context (BuildContext): The `context` parameter in Flutter represents the build context of the
-  /// widget. It is a reference to the location of a widget within the widget tree. The context provides
-  /// access to various properties and methods related to the widget, such as theme data, media queries,
-  /// and navigation.
-  ///
-  /// Returns:
-  ///   The build method is returning a Widget tree that consists of a GradientBackground widget as the
-  /// root, which contains a Scaffold widget. Inside the Scaffold, there is an AppBar with a title, a
-  /// body that includes a SingleChildScrollView with multiple child widgets such as RoundedBackground,
-  /// YearlyConsumptionChart, Text widgets, Row widget, ElevatedButton widgets, and more. The
-  /// bottomNavigationBar is set to an AppNavigation
+  /// The UI includes a gradient background, charts, tariff selection, futuristic-styled buttons,
+  /// and a bottom navigation bar.
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
@@ -112,6 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Chart with rounded background.
               RoundedBackground(
                 child: YearlyConsumptionChart(
                   dataStream: _controller.getMonthlySumOfColumnForYear(
@@ -120,6 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const SizedBox(height: 16),
+              // Daily average section wrapped in a rounded background.
               RoundedBackground(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -168,24 +156,23 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 32),
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    _showPicker(context);
-                  },
-                  icon: const Icon(Icons.arrow_drop_down),
-                  label: Text(_selectedOption),
-                ),
+                child: CustomButton(
+                    onPressed: () {
+                      _showPicker(context);
+                    },
+                    icon:
+                        const Icon(Icons.arrow_drop_down, color: Colors.white),
+                    label: _selectedOption),
               ),
               const SizedBox(height: 16),
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/add_consumption');
-                  },
-                  icon: const Icon(Icons.add),
-                  label: const Text('Přidat odečet'),
-                ),
+                child: CustomButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/add_consumption');
+                    },
+                    icon: const Icon(Icons.add, color: Colors.white),
+                    label: 'Přidat odečet'),
               ),
             ],
           ),
