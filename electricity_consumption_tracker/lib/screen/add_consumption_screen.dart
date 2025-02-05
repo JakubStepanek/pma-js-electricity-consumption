@@ -105,7 +105,7 @@ class _AddConsumptionScreenState extends State<AddConsumptionScreen> {
         consumptionTarifLow:
             drift.Value(double.parse(_lowTariffController.text)),
         consumptionTarifOut:
-            drift.Value(double.tryParse(_outTariffController.text ?? '')),
+            drift.Value(double.tryParse(_outTariffController.text)),
       );
 
       Provider.of<AppDatabase>(context, listen: false)

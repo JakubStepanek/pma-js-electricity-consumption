@@ -1,4 +1,3 @@
-import 'package:electricity_consumption_tracker/resources/app_colors.dart';
 import 'package:electricity_consumption_tracker/widget/custom_button.dart';
 import 'package:electricity_consumption_tracker/widget/rounded_background.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   late final List<String> options;
   String _selectedOption = 'Nízký tarif';
-  DateTimeRange? _selectedDateRange;
+  //DateTimeRange? _selectedDateRange;
 
   @override
   void initState() {
@@ -82,8 +81,6 @@ class _HomeScreenState extends State<HomeScreen> {
   /// and a bottom navigation bar.
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
-
     return GradientBackground(
       child: Scaffold(
         backgroundColor: Colors.transparent,

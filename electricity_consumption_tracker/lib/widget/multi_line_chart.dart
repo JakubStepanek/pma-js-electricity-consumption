@@ -1,5 +1,4 @@
 import 'package:electricity_consumption_tracker/resources/app_colors.dart';
-import 'package:electricity_consumption_tracker/utils/extensions/color_extensions.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -140,19 +139,6 @@ class MultiLineChart extends StatelessWidget {
     return maxValue * 1.1;
   }
 
-  /// Builds a linear gradient to be applied to the lines.
-  ///
-  /// The gradient is defined from bottomCenter to topCenter using colors from [AppColors] and a custom darken extension.
-  ///
-  /// Returns a [LinearGradient] for styling the chart lines.
-  LinearGradient _buildBarsGradient() => LinearGradient(
-        colors: [
-          AppColors.contentColorBlue.darken(20),
-          AppColors.contentColorCyan,
-        ],
-        begin: Alignment.bottomCenter,
-        end: Alignment.topCenter,
-      );
 
   /// Builds the titles (axis labels) for the chart.
   ///
