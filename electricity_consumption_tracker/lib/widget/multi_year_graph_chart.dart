@@ -4,6 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
+/// A stateful widget that displays a multi-year graph chart based on consumption data.
+///
+/// The widget allows the user to select one or more years and a tariff type. It then
+/// builds a combined data stream from the provided [GraphAnalysisScreenController] and
+/// renders a multiline chart using the [MultiLineChart] widget.
 class MultiYearGraphChart extends StatefulWidget {
   const MultiYearGraphChart({Key? key}) : super(key: key);
 
@@ -11,27 +16,35 @@ class MultiYearGraphChart extends StatefulWidget {
   _MultiYearGraphChartState createState() => _MultiYearGraphChartState();
 }
 
+/// The state for [MultiYearGraphChart].
+///
+/// Maintains the list of selected years and the currently selected tariff. It also fetches the
+/// available years from the [GraphAnalysisScreenController] and builds a combined data stream
+/// used by the chart.
 class _MultiYearGraphChartState extends State<MultiYearGraphChart> {
-  // Seznam vybraných let – budeme jej měnit dle výběru uživatele.
+  /// List of years selected by the user. Defaults to the current year.
   List<int> selectedYears = [DateTime.now().year];
 
-  // Vybraný tarif – pouze jeden najednou.
+  /// The currently selected tariff.
   String selectedTariff = 'Nízký tarif';
 
-  // Mapa, která propojuje název tarifu s názvem sloupce v databázi.
+  /// A map linking the display names of tariffs to their corresponding database column names.
   final Map<String, String> tariffColumnMap = {
     'Nízký tarif': 'consumptionTarifLow',
     'Vysoký tarif': 'consumptionTarifHigh',
     'Prodejní tarif': 'consumptionTarifOut',
   };
 
-  // Budeme uchovávat budoucí hodnotu dostupných let, získaných z databáze.
+  /// Future that fetches the list of available unique years from the controller.
   Future<List<int>>? _availableYearsFuture;
 
+  /// Called when the dependencies of this widget change.
+  ///
+  /// This method initializes [_availableYearsFuture] if it hasn't been already set, by fetching
+  /// the unique years from the [GraphAnalysisScreenController].
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Načteme unikátní roky z databáze pouze jednou.
     if (_availableYearsFuture == null) {
       final controller =
           Provider.of<GraphAnalysisScreenController>(context, listen: false);
@@ -39,9 +52,16 @@ class _MultiYearGraphChartState extends State<MultiYearGraphChart> {
     }
   }
 
+  /// Builds the widget tree.
+  ///
+  /// The UI includes:
+  /// - A title and a dropdown for selecting the tariff.
+  /// - A set of [FilterChip] widgets representing the available years.
+  /// - Depending on the selection, either a message prompting the user to select at least one year,
+  ///   or the multiline chart displaying the consumption data.
   @override
   Widget build(BuildContext context) {
-    // Získáme instanci controlleru z Provideru.
+    // Retrieve the controller from the provider.
     final GraphAnalysisScreenController controller =
         Provider.of<GraphAnalysisScreenController>(context, listen: false);
 
@@ -54,7 +74,7 @@ class _MultiYearGraphChartState extends State<MultiYearGraphChart> {
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
-        // Výběr tarifu pomocí DropdownButton.
+        // Dropdown for selecting the tariff.
         Row(
           children: [
             const Text('Tarif: '),
@@ -77,7 +97,7 @@ class _MultiYearGraphChartState extends State<MultiYearGraphChart> {
           ],
         ),
         const SizedBox(height: 8),
-        // FutureBuilder načítá dostupné roky z databáze.
+        // FutureBuilder for available years.
         FutureBuilder<List<int>>(
           future: _availableYearsFuture,
           builder: (context, snapshot) {
@@ -98,7 +118,7 @@ class _MultiYearGraphChartState extends State<MultiYearGraphChart> {
                       } else {
                         selectedYears.remove(year);
                       }
-                      selectedYears.sort(); // Pro konzistentní pořadí.
+                      selectedYears.sort();
                     });
                   },
                 );
@@ -107,7 +127,7 @@ class _MultiYearGraphChartState extends State<MultiYearGraphChart> {
           },
         ),
         const SizedBox(height: 8),
-        // Pokud nebyl vybrán žádný rok, zobrazíme informační text místo grafu.
+        // If no years are selected, show an error message; otherwise display the chart.
         if (selectedYears.isEmpty)
           const Padding(
             padding: EdgeInsets.all(16.0),
@@ -126,8 +146,8 @@ class _MultiYearGraphChartState extends State<MultiYearGraphChart> {
                 return const Center(child: CircularProgressIndicator());
               }
               final dataStream = snapshot.data!;
-// Generování seznamu barev – počet barev odpovídá počtu vybraných let a mezi nimi je použit shift factor.
               final int shiftFactor = 3;
+              // Generate colors for each selected year.
               final List<Color> generatedLineColors = List.generate(
                 selectedYears.length,
                 (index) => Colors
@@ -148,20 +168,27 @@ class _MultiYearGraphChartState extends State<MultiYearGraphChart> {
     );
   }
 
-  /// Pro každý vybraný rok získá stream dat pro zvolený tarif a pak je kombinuje.
+  /// Builds a combined data stream from multiple years.
+  ///
+  /// For each selected year, this method fetches a data stream using the [GraphAnalysisScreenController]
+  /// and extracts the first list of double values from the stream. All individual streams are then combined
+  /// using [CombineLatestStream.list] into a single stream that provides data for the multiline chart.
+  ///
+  /// Args:
+  ///   controller: An instance of [GraphAnalysisScreenController] used to fetch the data.
+  ///
+  /// Returns:
+  ///   A [Future] that resolves to a [Stream] of a list of lists of nullable doubles. Each inner list corresponds
+  ///   to the data points for one selected year.
   Future<Stream<List<List<double?>>>> _buildCombinedDataStream(
       GraphAnalysisScreenController controller) async {
-    // Vybraný sloupec podle tarifu.
     final String column = tariffColumnMap[selectedTariff]!;
-    // Pro každý vybraný rok získáme stream – při předání jednoho sloupce bude výsledný seznam obsahovat pouze jeden prvek.
     final List<Stream<List<double?>>> streams = selectedYears.map((year) {
       return controller.getGraphDataStream(
           year, [column]).map((listOfLists) => listOfLists.first);
     }).toList();
 
-    // Kombinujeme všechny streamy do jednoho pomocí CombineLatestStream z RxDart.
     return CombineLatestStream.list(streams).map((listOfData) {
-      // Vracíme List<List<double?>>: každý prvek odpovídá datům pro jeden rok.
       return listOfData;
     });
   }
